@@ -1,0 +1,53 @@
+﻿<html>
+<head>
+    <title> Log In</title>
+    <link href="~/Content/SignIn.css" rel="stylesheet" />
+
+    <style>
+    </style>
+</head>
+<body style="background-image: url('../../Images/signinbg.jpg'); background-size: 100%;">
+    <center>
+        <div class="loginform_background">
+            <div class="opacity_container">
+            </div>
+
+            <div class="logo_container">
+                @using (Html.BeginForm(null, "SignIn", FormMethod.Post))
+                {
+                    <center>
+                        <img class="logo" src="~/Images/addonlogo 2.png" />
+                    </center>
+
+                    <center>
+                        @{
+                            if (TempData["NotExist"] != null)
+                            {
+                                    <p style="color:red; margin:0; padding:0; ">@TempData["NotExist"].ToString()</p>
+                            }
+                        }
+                        <input type="text" class="Login" placeholder="Username" name="EmailAddress" />
+                    </center>   
+
+                    <center>
+
+                        <input type="password" class="Login" placeholder="Password" name="Password" />
+                    </center>
+
+                    <center>
+                        <button type="submit" class="btn btn-default BtnSignIn">
+                            Sign In
+                        </button>
+
+                        <div style="margin-bottom:3%">
+
+                            <a href="~/Home/ForgotPassword" style="color:white;text-decoration:none;">Forgot Password?</a>
+
+                        </div>
+                    </center>
+                }
+            </div>
+        </div>
+    </center>
+</body>
+</html>

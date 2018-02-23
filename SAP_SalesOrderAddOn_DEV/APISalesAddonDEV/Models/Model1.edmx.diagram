@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="b9a83ac1b77a48d79a6b5bee76f6d9dc" Name="Diagram1">
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tAccount" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tAccountContact" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tAccountStatu" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tAPMatrixCreditMemo" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tAPMatrixDistributionFee" Width="1.5" PointX="4.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tCreditMemoFeeBasi" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tDiscountList" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tEmployee" Width="1.5" PointX="6.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tOtherCriteria" Width="1.5" PointX="6.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tPaymentTerm" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tPriceList" Width="1.5" PointX="2.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tProduct" Width="1.5" PointX="8.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tSalesInvoiceHeader" Width="1.5" PointX="8.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tSalesInvoiceLine" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tSalesOrderHeader" Width="1.5" PointX="10.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tSalesOrderStatu" Width="1.5" PointX="10.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tShippingAddress" Width="1.5" PointX="0.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tSupplier" Width="1.5" PointX="6.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tTax" Width="1.5" PointX="12.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tUserLogin" Width="1.5" PointX="12.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.vSalesOrderHeaderList" Width="1.5" PointX="12.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.vSalesOrderLine" Width="1.5" PointX="12.75" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tPostingErrorLog" Width="1.5" PointX="9.375" PointY="13.75" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tAddOnSalesOrderTransactionStatu" Width="1.5" PointX="15.375" PointY="0.75" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tSalesOrderLine" Width="1.5" PointX="3.375" PointY="11.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

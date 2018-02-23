@@ -1,0 +1,310 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DB_A1270D_SAPSalesAddOnModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="tAccount">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="PaymentTermsID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="AccountName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="AccountAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CustomerGroupCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="tAccountContact">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountContactID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="AccountID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ContactPerson" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Status" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="DefaultContact" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="tAccountStatu">
+    <Key>
+      <PropertyRef Name="StatusCode" />
+    </Key>
+    <Property Name="StatusCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="StatusDesc" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="tAPMatrixCreditMemo">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SupplierID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CustomerClassGroup" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CustomerClassGroupCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CustomerClassGroupDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreditMemoFeeBasisID" Type="Int32" />
+    <Property Name="OrderType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="AccountClass" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreditMemoPercentagePerTemplate" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="tAPMatrixDistributionFee">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SupplierID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CustomerGroupDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CustomerGroupCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="OtherCriteriaID" Type="Int32" />
+    <Property Name="DistributionMarginRate" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="tCreditMemoFeeBasi">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CreditMemoFeeBasisID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreditMemoFeeBasisDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="tDiscountList">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ProductID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ProductType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CustomerGroupCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ProductCategory" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="DiscountLevel" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PercentageValue" Type="Double" />
+    <Property Name="ListID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="tEmployee">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="EmployeeID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="EmailAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="FirstName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="LastName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ContactNumber" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
+    <Property Name="Role" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="tOtherCriteria">
+    <Key>
+      <PropertyRef Name="OtherCriteriaID" />
+    </Key>
+    <Property Name="OtherCriteriaID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="OtherCriteriaDesc" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="tPaymentTerm">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PaymentTermsID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PaymentTermsCode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="tPostingErrorLog">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="salesOrderID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="errorDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="errorDate" Type="DateTime" Precision="3" />
+    <Property Name="createdBy" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="errorTypeID" Type="Int32" />
+  </EntityType>
+  <EntityType Name="tPriceList">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProductID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="UoM" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="UnitPrice" Type="Double" />
+    <Property Name="EffectivityDate" Type="DateTime" Precision="3" />
+    <Property Name="Status" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="tProduct">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProductID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SupplierID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ProductCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+    <Property Name="ProductName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CategoryName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PackSize" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="UoM" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="UnitPrice" Type="Double" />
+    <Property Name="Discount" Type="Double" />
+    <Property Name="ProductCategoryID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="tSalesInvoiceHeader">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SalesInvoiceID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="InvoiceType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="AccountID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="InvoiceDate" Type="DateTime" Precision="3" />
+    <Property Name="DueDate" Type="DateTime" Precision="3" />
+    <Property Name="InvoiceAmount" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="DatePaid" Type="DateTime" Precision="3" />
+    <Property Name="AmountPaid" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="SalesOrderID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="tSalesInvoiceLine">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SalesInvoiceID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SalesInvoiceLineID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="InvoiceDate" Type="DateTime" Precision="3" />
+    <Property Name="InvoiceAmount" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="AmountPaid" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="DatePaid" Type="DateTime" Precision="3" />
+    <Property Name="ProductID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="UnitPrice" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="tSalesOrderHeader">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SalesOrderID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SAP_SalesOrderID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="EmployeeID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="AccountID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="AccountContactID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PaymentTermsID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SupplierID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SalesOrderCreationDate" Type="DateTime" Precision="3" />
+    <Property Name="ExternalReference" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ShippingAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="RequestedDate" Type="DateTime" Precision="3" />
+    <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="GrossAmount" Type="Double" />
+    <Property Name="Discount1Amount" Type="Double" />
+    <Property Name="Discount2Amount" Type="Double" />
+    <Property Name="SalesOrderAmount" Type="Double" />
+    <Property Name="TransactionStatusID" Type="Int32" />
+    <Property Name="Status" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="BuyerResponsible" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="tSalesOrderStatu">
+    <Key>
+      <PropertyRef Name="StatusCode" />
+    </Key>
+    <Property Name="StatusCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="StatusDesc" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="tShippingAddress">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ShippingAddressID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="AccountID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ShippingAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ShippingAddressNoComma" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="DefaultShipTo" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="tSupplier">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SupplierID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SupplierName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SupplierNameNoComma" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="TaxType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Incoterms" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IncotermsLocation" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Currency" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="tTax">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SupplierID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Classification" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Rate" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="tUserLogin">
+    <Key>
+      <PropertyRef Name="LoginID" />
+    </Key>
+    <Property Name="LoginID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="EmployeeID" Type="Int32" />
+    <Property Name="EmailAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Password" Type="String" MaxLength="32" FixedLength="false" Unicode="false" />
+    <Property Name="Status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="tAddOnSalesOrderTransactionStatu">
+    <Key>
+      <PropertyRef Name="statusID" />
+    </Key>
+    <Property Name="statusID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="statusDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityContainer Name="DB_A1270D_SAPSalesAddOnEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="tAccounts" EntityType="Self.tAccount" />
+    <EntitySet Name="tAccountContacts" EntityType="Self.tAccountContact" />
+    <EntitySet Name="tAccountStatus" EntityType="Self.tAccountStatu" />
+    <EntitySet Name="tAPMatrixCreditMemoes" EntityType="Self.tAPMatrixCreditMemo" />
+    <EntitySet Name="tAPMatrixDistributionFees" EntityType="Self.tAPMatrixDistributionFee" />
+    <EntitySet Name="tCreditMemoFeeBasis" EntityType="Self.tCreditMemoFeeBasi" />
+    <EntitySet Name="tDiscountLists" EntityType="Self.tDiscountList" />
+    <EntitySet Name="tEmployees" EntityType="Self.tEmployee" />
+    <EntitySet Name="tOtherCriterias" EntityType="Self.tOtherCriteria" />
+    <EntitySet Name="tPaymentTerms" EntityType="Self.tPaymentTerm" />
+    <EntitySet Name="tPostingErrorLogs" EntityType="Self.tPostingErrorLog" />
+    <EntitySet Name="tPriceLists" EntityType="Self.tPriceList" />
+    <EntitySet Name="tProducts" EntityType="Self.tProduct" />
+    <EntitySet Name="tSalesInvoiceHeaders" EntityType="Self.tSalesInvoiceHeader" />
+    <EntitySet Name="tSalesInvoiceLines" EntityType="Self.tSalesInvoiceLine" />
+    <EntitySet Name="tSalesOrderHeaders" EntityType="Self.tSalesOrderHeader" />
+    <EntitySet Name="tSalesOrderStatus" EntityType="Self.tSalesOrderStatu" />
+    <EntitySet Name="tShippingAddresses" EntityType="Self.tShippingAddress" />
+    <EntitySet Name="tSuppliers" EntityType="Self.tSupplier" />
+    <EntitySet Name="tTaxes" EntityType="Self.tTax" />
+    <EntitySet Name="tUserLogins" EntityType="Self.tUserLogin" />
+    <EntitySet Name="tAddOnSalesOrderTransactionStatus" EntityType="Self.tAddOnSalesOrderTransactionStatu" />
+    <EntitySet Name="tSalesOrderLines" EntityType="DB_A1270D_SAPSalesAddOnModel.tSalesOrderLine" />
+  </EntityContainer>
+  <EntityType Name="tSalesOrderLine">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SalesOrderID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SalesOrderLineID" Type="Int32" />
+    <Property Name="SAP_SalesOrderID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SAP_SalesOrderLineID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ProductID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="UnitPrice" Type="Double" />
+    <Property Name="FreeGood" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+    <Property Name="Quantity" Type="Int32" />
+    <Property Name="UoM" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Discount" Type="Double" />
+    <Property Name="GrossAmount" Type="Double" />
+    <Property Name="Discount1Amount" Type="Double" />
+    <Property Name="Discount2Amount" Type="Double" />
+    <Property Name="SalesOrderLineAmount" Type="Double" />
+    <Property Name="TransactionStatus" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ExternalLineReference" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+</Schema>

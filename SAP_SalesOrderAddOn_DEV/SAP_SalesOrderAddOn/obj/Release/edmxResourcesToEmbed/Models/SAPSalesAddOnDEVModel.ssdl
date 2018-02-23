@@ -1,0 +1,387 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DB_A1270D_SAPSalesAddOnModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="tAccount">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountID" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="PaymentTermsID" Type="nvarchar(max)" />
+    <Property Name="AccountName" Type="nvarchar(max)" />
+    <Property Name="AccountAddress" Type="nvarchar(max)" />
+    <Property Name="Status" Type="nvarchar(max)" />
+    <Property Name="CustomerGroupCode" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="tAccountContact">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountContactID" Type="nvarchar(max)" />
+    <Property Name="AccountID" Type="nvarchar(max)" />
+    <Property Name="ContactPerson" Type="varchar(max)" />
+    <Property Name="Status" Type="nvarchar" MaxLength="10" />
+    <Property Name="DefaultContact" Type="nvarchar" MaxLength="1" />
+  </EntityType>
+  <EntityType Name="tAccountStatus">
+    <Key>
+      <PropertyRef Name="StatusCode" />
+    </Key>
+    <Property Name="StatusCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="StatusDesc" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="tAPMatrixCreditMemo">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Code" Type="nvarchar(max)" />
+    <Property Name="SupplierID" Type="nvarchar(max)" />
+    <Property Name="CustomerClassGroup" Type="nvarchar(max)" />
+    <Property Name="CustomerClassGroupCode" Type="nvarchar(max)" />
+    <Property Name="CustomerClassGroupDescription" Type="nvarchar(max)" />
+    <Property Name="CreditMemoFeeBasisID" Type="int" />
+    <Property Name="OrderType" Type="nvarchar(max)" />
+    <Property Name="AccountClass" Type="nvarchar(max)" />
+    <Property Name="CreditMemoPercentagePerTemplate" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="tAPMatrixDistributionFee">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Code" Type="nvarchar(max)" />
+    <Property Name="SupplierID" Type="nvarchar(max)" />
+    <Property Name="CustomerGroupDescription" Type="nvarchar(max)" />
+    <Property Name="CustomerGroupCode" Type="nvarchar(max)" />
+    <Property Name="OtherCriteriaID" Type="int" />
+    <Property Name="DistributionMarginRate" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="tCreditMemoFeeBasis">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CreditMemoFeeBasisID" Type="nvarchar(max)" />
+    <Property Name="CreditMemoFeeBasisDescription" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="tDiscountList">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountID" Type="nvarchar(max)" />
+    <Property Name="ProductID" Type="nvarchar(max)" />
+    <Property Name="ProductType" Type="nvarchar(max)" />
+    <Property Name="CustomerGroupCode" Type="nvarchar(max)" />
+    <Property Name="ProductCategory" Type="nvarchar(max)" />
+    <Property Name="DiscountLevel" Type="nvarchar(max)" />
+    <Property Name="PercentageValue" Type="float" />
+  </EntityType>
+  <EntityType Name="tEmployee">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EmployeeID" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="EmailAddress" Type="nvarchar(max)" />
+    <Property Name="FirstName" Type="nvarchar(max)" />
+    <Property Name="LastName" Type="nvarchar(max)" />
+    <Property Name="ContactNumber" Type="nvarchar" MaxLength="12" />
+    <Property Name="Role" Type="nvarchar(max)" />
+    <Property Name="Status" Type="nvarchar" MaxLength="10" />
+  </EntityType>
+  <EntityType Name="tOtherCriteria">
+    <Key>
+      <PropertyRef Name="OtherCriteriaID" />
+    </Key>
+    <Property Name="OtherCriteriaID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="OtherCriteriaDesc" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="tPaymentTerm">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PaymentTermsID" Type="nvarchar(max)" />
+    <Property Name="PaymentTermsCode" Type="nvarchar" MaxLength="10" />
+    <Property Name="Description" Type="nvarchar" MaxLength="25" />
+  </EntityType>
+  <EntityType Name="tPostingErrorLogs">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="salesOrderID" Type="nvarchar(max)" />
+    <Property Name="errorDescription" Type="nvarchar(max)" />
+    <Property Name="errorDate" Type="datetime" />
+    <Property Name="createdBy" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="tPriceList">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ProductID" Type="nvarchar(max)" />
+    <Property Name="UoM" Type="nvarchar(max)" />
+    <Property Name="UnitPrice" Type="float" />
+    <Property Name="EffectivityDate" Type="datetime" />
+    <Property Name="Status" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="tProduct">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ProductID" Type="nvarchar(max)" />
+    <Property Name="SupplierID" Type="nvarchar(max)" />
+    <Property Name="ProductCode" Type="nvarchar" MaxLength="15" />
+    <Property Name="ProductName" Type="nvarchar(max)" />
+    <Property Name="CategoryName" Type="nvarchar(max)" />
+    <Property Name="PackSize" Type="nvarchar(max)" />
+    <Property Name="UoM" Type="nvarchar" MaxLength="50" />
+    <Property Name="UnitPrice" Type="float" />
+    <Property Name="Discount" Type="float" />
+  </EntityType>
+  <EntityType Name="tSalesInvoiceHeader">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SalesInvoiceID" Type="nvarchar(max)" />
+    <Property Name="InvoiceType" Type="nvarchar(max)" />
+    <Property Name="AccountID" Type="nvarchar(max)" />
+    <Property Name="InvoiceDate" Type="datetime" />
+    <Property Name="DueDate" Type="datetime" />
+    <Property Name="InvoiceAmount" Type="nvarchar(max)" />
+    <Property Name="Status" Type="nvarchar(max)" />
+    <Property Name="DatePaid" Type="datetime" />
+    <Property Name="AmountPaid" Type="nchar" MaxLength="10" />
+  </EntityType>
+  <EntityType Name="tSalesInvoiceLine">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SalesInvoiceID" Type="nvarchar(max)" />
+    <Property Name="SalesInvoiceLineID" Type="nvarchar(max)" />
+    <Property Name="InvoiceDate" Type="datetime" />
+    <Property Name="InvoiceAmount" Type="nvarchar(max)" />
+    <Property Name="AmountPaid" Type="nvarchar(max)" />
+    <Property Name="DatePaid" Type="datetime" />
+    <Property Name="ProductID" Type="nvarchar(max)" />
+    <Property Name="UnitPrice" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="tSalesOrderHeader">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SalesOrderID" Type="nvarchar(max)" />
+    <Property Name="SAP_SalesOrderID" Type="nvarchar(max)" />
+    <Property Name="EmployeeID" Type="nvarchar(max)" />
+    <Property Name="AccountID" Type="nvarchar(max)" />
+    <Property Name="AccountContactID" Type="nvarchar(max)" />
+    <Property Name="PaymentTermsID" Type="nvarchar(max)" />
+    <Property Name="SupplierID" Type="nvarchar(max)" />
+    <Property Name="SalesOrderCreationDate" Type="datetime" />
+    <Property Name="ExternalReference" Type="nvarchar(max)" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="ShippingAddress" Type="nvarchar(max)" />
+    <Property Name="RequestedDate" Type="datetime" />
+    <Property Name="Comments" Type="nvarchar(max)" />
+    <Property Name="GrossAmount" Type="float" />
+    <Property Name="Discount1Amount" Type="float" />
+    <Property Name="Discount2Amount" Type="float" />
+    <Property Name="SalesOrderAmount" Type="float" />
+    <Property Name="TransactionStatus" Type="nvarchar(max)" />
+    <Property Name="Status" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="tSalesOrderLine">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SalesOrderID" Type="nvarchar(max)" />
+    <Property Name="SalesOrderLineID" Type="int" />
+    <Property Name="SAP_SalesOrderID" Type="nvarchar(max)" />
+    <Property Name="SAP_SalesOrderLineID" Type="nvarchar(max)" />
+    <Property Name="ProductID" Type="nvarchar(max)" />
+    <Property Name="UnitPrice" Type="float" />
+    <Property Name="FreeGood" Type="nvarchar" MaxLength="3" />
+    <Property Name="Quantity" Type="int" />
+    <Property Name="UoM" Type="nvarchar(max)" />
+    <Property Name="Discount" Type="float" />
+    <Property Name="GrossAmount" Type="float" />
+    <Property Name="Discount1Amount" Type="float" />
+    <Property Name="Discount2Amount" Type="float" />
+    <Property Name="SalesOrderLineAmount" Type="float" />
+    <Property Name="TransactionStatus" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="tSalesOrderStatus">
+    <Key>
+      <PropertyRef Name="StatusCode" />
+    </Key>
+    <Property Name="StatusCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="StatusDesc" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="tShippingAddress">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ShippingAddressID" Type="nvarchar(max)" />
+    <Property Name="AccountID" Type="nvarchar(max)" />
+    <Property Name="ShippingAddress" Type="nvarchar(max)" />
+    <Property Name="ShippingAddressNoComma" Type="nvarchar(max)" />
+    <Property Name="Status" Type="nvarchar" MaxLength="10" />
+    <Property Name="DefaultShipTo" Type="nvarchar" MaxLength="1" />
+  </EntityType>
+  <EntityType Name="tSupplier">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SupplierID" Type="nvarchar(max)" />
+    <Property Name="SupplierName" Type="nvarchar(max)" />
+    <Property Name="SupplierNameNoComma" Type="nvarchar(max)" />
+    <Property Name="TaxType" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="tTaxes">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SupplierID" Type="nvarchar(max)" />
+    <Property Name="Classification" Type="nvarchar(max)" />
+    <Property Name="Rate" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="tUserLogins">
+    <Key>
+      <PropertyRef Name="LoginID" />
+    </Key>
+    <Property Name="LoginID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EmployeeID" Type="int" />
+    <Property Name="EmailAddress" Type="varchar(max)" />
+    <Property Name="Password" Type="varchar" MaxLength="32" />
+    <Property Name="Status" Type="varchar" MaxLength="10" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'DB_A1270D_SAPSalesAddOn.dbo.vSalesOrderHeaderList' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vSalesOrderHeaderList">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="AccountName" Type="nvarchar(max)" />
+    <Property Name="SalesOrderID" Type="nvarchar(max)" />
+    <Property Name="SAP_SalesOrderID" Type="nvarchar(max)" />
+    <Property Name="EmployeeID" Type="nvarchar(max)" />
+    <Property Name="AccountID" Type="nvarchar(max)" />
+    <Property Name="AccountContactID" Type="nvarchar(max)" />
+    <Property Name="PaymentTermsID" Type="nvarchar(max)" />
+    <Property Name="SupplierID" Type="nvarchar(max)" />
+    <Property Name="SalesOrderCreationDate" Type="datetime" />
+    <Property Name="Description" Type="nvarchar(max)" />
+    <Property Name="ExternalReference" Type="nvarchar(max)" />
+    <Property Name="ShippingAddress" Type="nvarchar(max)" />
+    <Property Name="RequestedDate" Type="datetime" />
+    <Property Name="SalesOrderAmount" Type="float" />
+    <Property Name="Comments" Type="nvarchar(max)" />
+    <Property Name="TransactionStatus" Type="nvarchar(max)" />
+    <Property Name="SAP_Status" Type="nvarchar(max)" />
+    <Property Name="SupplierName" Type="varchar(max)" />
+    <Property Name="ID" Type="int" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'DB_A1270D_SAPSalesAddOn.dbo.vSalesOrderLine' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vSalesOrderLine">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="SalesOrderID" Type="nvarchar(max)" />
+    <Property Name="SalesOrderLineID" Type="int" />
+    <Property Name="SAP_SalesOrderID" Type="nvarchar(max)" />
+    <Property Name="SAP_SalesOrderLineID" Type="nvarchar(max)" />
+    <Property Name="UnitPrice" Type="float" />
+    <Property Name="FreeGood" Type="nvarchar" MaxLength="3" />
+    <Property Name="Quantity" Type="int" />
+    <Property Name="UoM" Type="nvarchar(max)" />
+    <Property Name="Discount" Type="float" />
+    <Property Name="SalesOrderLineAmount" Type="float" />
+    <Property Name="ProductCode" Type="nvarchar" MaxLength="15" />
+    <Property Name="ProductName" Type="nvarchar(max)" />
+    <Property Name="PrdUnitPrice" Type="float" />
+    <Property Name="PrdDiscount" Type="float" />
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="Expr1" Type="nvarchar(max)" />
+    <Property Name="ProductID" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityContainer Name="DB_A1270D_SAPSalesAddOnModelStoreContainer">
+    <EntitySet Name="tAccount" EntityType="Self.tAccount" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tAccountContact" EntityType="Self.tAccountContact" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tAccountStatus" EntityType="Self.tAccountStatus" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tAPMatrixCreditMemo" EntityType="Self.tAPMatrixCreditMemo" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tAPMatrixDistributionFee" EntityType="Self.tAPMatrixDistributionFee" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tCreditMemoFeeBasis" EntityType="Self.tCreditMemoFeeBasis" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tDiscountList" EntityType="Self.tDiscountList" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tEmployee" EntityType="Self.tEmployee" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tOtherCriteria" EntityType="Self.tOtherCriteria" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tPaymentTerm" EntityType="Self.tPaymentTerm" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tPostingErrorLogs" EntityType="Self.tPostingErrorLogs" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tPriceList" EntityType="Self.tPriceList" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tProduct" EntityType="Self.tProduct" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tSalesInvoiceHeader" EntityType="Self.tSalesInvoiceHeader" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tSalesInvoiceLine" EntityType="Self.tSalesInvoiceLine" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tSalesOrderHeader" EntityType="Self.tSalesOrderHeader" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tSalesOrderLine" EntityType="Self.tSalesOrderLine" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tSalesOrderStatus" EntityType="Self.tSalesOrderStatus" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tShippingAddress" EntityType="Self.tShippingAddress" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tSupplier" EntityType="Self.tSupplier" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tTaxes" EntityType="Self.tTaxes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tUserLogins" EntityType="Self.tUserLogins" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="vSalesOrderHeaderList" EntityType="Self.vSalesOrderHeaderList" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vSalesOrderHeaderList].[AccountName] AS [AccountName], 
+    [vSalesOrderHeaderList].[SalesOrderID] AS [SalesOrderID], 
+    [vSalesOrderHeaderList].[SAP_SalesOrderID] AS [SAP_SalesOrderID], 
+    [vSalesOrderHeaderList].[EmployeeID] AS [EmployeeID], 
+    [vSalesOrderHeaderList].[AccountID] AS [AccountID], 
+    [vSalesOrderHeaderList].[AccountContactID] AS [AccountContactID], 
+    [vSalesOrderHeaderList].[PaymentTermsID] AS [PaymentTermsID], 
+    [vSalesOrderHeaderList].[SupplierID] AS [SupplierID], 
+    [vSalesOrderHeaderList].[SalesOrderCreationDate] AS [SalesOrderCreationDate], 
+    [vSalesOrderHeaderList].[Description] AS [Description], 
+    [vSalesOrderHeaderList].[ExternalReference] AS [ExternalReference], 
+    [vSalesOrderHeaderList].[ShippingAddress] AS [ShippingAddress], 
+    [vSalesOrderHeaderList].[RequestedDate] AS [RequestedDate], 
+    [vSalesOrderHeaderList].[SalesOrderAmount] AS [SalesOrderAmount], 
+    [vSalesOrderHeaderList].[Comments] AS [Comments], 
+    [vSalesOrderHeaderList].[TransactionStatus] AS [TransactionStatus], 
+    [vSalesOrderHeaderList].[SAP_Status] AS [SAP_Status], 
+    [vSalesOrderHeaderList].[SupplierName] AS [SupplierName], 
+    [vSalesOrderHeaderList].[ID] AS [ID]
+    FROM [dbo].[vSalesOrderHeaderList] AS [vSalesOrderHeaderList]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vSalesOrderLine" EntityType="Self.vSalesOrderLine" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vSalesOrderLine].[SalesOrderID] AS [SalesOrderID], 
+    [vSalesOrderLine].[SalesOrderLineID] AS [SalesOrderLineID], 
+    [vSalesOrderLine].[SAP_SalesOrderID] AS [SAP_SalesOrderID], 
+    [vSalesOrderLine].[SAP_SalesOrderLineID] AS [SAP_SalesOrderLineID], 
+    [vSalesOrderLine].[UnitPrice] AS [UnitPrice], 
+    [vSalesOrderLine].[FreeGood] AS [FreeGood], 
+    [vSalesOrderLine].[Quantity] AS [Quantity], 
+    [vSalesOrderLine].[UoM] AS [UoM], 
+    [vSalesOrderLine].[Discount] AS [Discount], 
+    [vSalesOrderLine].[SalesOrderLineAmount] AS [SalesOrderLineAmount], 
+    [vSalesOrderLine].[ProductCode] AS [ProductCode], 
+    [vSalesOrderLine].[ProductName] AS [ProductName], 
+    [vSalesOrderLine].[PrdUnitPrice] AS [PrdUnitPrice], 
+    [vSalesOrderLine].[PrdDiscount] AS [PrdDiscount], 
+    [vSalesOrderLine].[ID] AS [ID], 
+    [vSalesOrderLine].[Expr1] AS [Expr1], 
+    [vSalesOrderLine].[ProductID] AS [ProductID]
+    FROM [dbo].[vSalesOrderLine] AS [vSalesOrderLine]</DefiningQuery>
+    </EntitySet>
+  </EntityContainer>
+</Schema>

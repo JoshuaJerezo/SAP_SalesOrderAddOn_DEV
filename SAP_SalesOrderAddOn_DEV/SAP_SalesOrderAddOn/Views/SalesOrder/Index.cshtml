@@ -1,0 +1,2900 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+
+@model IPagedList<SAP_SalesOrderAddOn.ViewModel.vSalesOrderHeaderViewModel>
+
+<html>
+<head>
+
+    <link href="~/Content/Layout.css" rel="stylesheet" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+
+    <style>
+        div.datetimepicker.datetimepicker-dropdown-bottom-right.dropdown-menu {
+            background-color: white !important;
+        }
+    </style>
+
+</head>
+<body style="background-image: url('../../Images/allpagebg.jpg');  background-size: 100%;">
+    <div id="loader" style="display: none"></div>
+    @if (TempData["ExcelUpload"] == "uploaded")
+    {
+        <script type="text/javascript">
+            alert("Uploaded Successfully");
+        </script>
+    }
+
+    @if (TempData["ExcelUpload"] == "Error")
+    {
+        <script type="text/javascript">
+            alert("Uploading Failed. Make sure that you have entered all the required fields.");
+        </script>
+    }
+
+    <!--20180220.CO.S Display message once Get APIs from SAP insert/update to add on database is success-->
+    @if (TempData["SapUpdatesSuccess"] != null && TempData["SapUpdatesSuccess"] != "")
+    {
+        <script type="text/javascript">
+            alert("@TempData["SapUpdatesSuccess"] syncing success. Your @TempData["SapUpdatesSuccess"] are up to date.");
+        </script>
+    }
+    <!--20180220.CO.E-->
+    <!--20180222.CO.S Display message once Get APIs from SAP insert/update to add on database is success-->
+    @if (TempData["SapSyncAllUpdatesSuccess"] != null && TempData["SapSyncAllUpdatesSuccess"] != "")
+    {
+        <script type="text/javascript">
+            alert("@TempData["SapSyncAllUpdatesSuccess"] syncing success. Your data are up to date.");
+        </script>
+    }
+    <!--20180222.CO.E-->
+
+    @Html.Partial("~/Views/Shared/NavBar.cshtml", null)
+
+    <div class="container-fluid">
+        <div class="PageTitle">
+            <center>
+                <h2><strong>SALES ORDER</strong></h2>
+            </center>
+        </div>
+    </div>
+
+    <div class="container-fluid" style="margin-top:10px;">
+        <div class="row">
+            <div class="col-12 col-md-8">
+                @using (Html.BeginForm("index", "SalesOrder", FormMethod.Get, new { @class = "form-inline" }))
+                {
+                    ViewBag.Employees = TempData["itemcustomers"];
+                    <div class="form-group">
+                        <input type="text" placeholder="Sales Order ID" id="soid" name="soid"
+                               style="width:10%; margin-left:5px; border-bottom: 1px solid #ffcb00;" />
+                        <input type="text" placeholder="Account Name" id="filterAccntName" name="filterAccntName" list="filteraccntlist"
+                               style="width:23%; margin-left:5px; border-bottom: 1px solid #ffcb00;" />
+                        <datalist id="filteraccntlist"></datalist>
+                        <input type="text" hidden id="selectedAccountfilter" name="accountid" />
+
+                        <input type="text" placeholder="Creation Date" id="CreationDate" name="cdate" data-date-format="mm-dd-yyyy"
+                               style="width:11%; margin-left:5px; border-bottom: 1px solid #ffcb00;" />
+
+                        <div class="form-group">
+                            <span class="plain-select" style="width:200px;">
+                                @Html.DropDownList("SupplierID", ViewBag.SupplierName as SelectList, "Supplier",
+                                                                                                                                                    new { id = "Supplier", @class = "MainSelect" })
+                            </span>
+                            <input type="text" hidden id="selectedSupplierfilter" name="supplierid" />
+                        </div>
+                        <div class="form-group">
+                            <span class="plain-select" style="width:150px;">
+                                @Html.DropDownList("tstatus", ViewBag.TransactionStatus as SelectList, "Transaction Status", new { id = "selection", @class = "MainSelect" })
+                                @*<select id="selection" name="tstatus" class="MainSelect">
+                                        <option value="" disabled selected>Transaction Status</option>
+                                        <option value="New">New</option>
+                                        <option value="Validated">Validated</option>
+                                        <option value="Processed">Processed</option>
+                                        <option value="Pending">Pending</option>
+                                        <option value="Completed">Completed</option>
+                                    </select>*@
+                            </span>
+                        </div>
+                        <button class="btn btn-main" style="box-shadow: 0px 2.5px 5px -2px grey;">
+                            Filter
+                        </button>
+                    </div>
+                }
+            </div>
+
+            <div class="col-6 col-md-4">
+                <div class="float-right">
+                    <div class="form-group">
+                        <button type="button" class="btn btn-main" style="margin-top:7.5px; box-shadow: 0px 2.5px 5px -2px grey;"
+                                data-toggle="modal" data-target="#AddSalesOrderModal">
+                            Add Sales Order
+                        </button>
+
+                        <button class="btn btn-main" style="margin-top:7.5px; box-shadow: 0px 2.5px 5px -2px grey;"
+                                data-toggle="modal" data-target="#UploadSalesOrderModal">
+                            Upload Sales Order
+                        </button>
+
+                        <button class="btn btn-main"
+                                style="margin-top:7.5px; box-shadow: 0px 2.5px 5px -2px grey;"
+                                onclick="popUp()">
+                            Post
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top:-13px">
+            <div class="col">
+                @*@using (Html.BeginForm("index", "Home", FormMethod.Get, new { id = "SalesOrderList" }))
+                    {*@
+                <table class="table table-striped">
+                    <thead>
+                        <tr style="border:0; border-top:2px solid gray">
+                            <td></td>
+                            <td><strong>Sales Order ID</strong></td>
+                            <td><strong>Account</strong></td>
+                            <td><strong>Creation Date</strong></td>
+                            <td><strong>Requested Delivery Date</strong></td>
+                            <td><strong>Supplier</strong></td>
+                            <td><strong>Total</strong></td>
+                            <td><strong>Transaction Status</strong></td>
+                            <td><strong>Status</strong></td>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @{
+                            int i = 0;
+                            foreach (var item in Model)
+                            {
+                                <tr style="border:0; border-top:2px solid darkgray">
+                                    @*----------UPDATE BUTTON STARTS HERE--------*@
+                                    @if (item.TransactionStatusID != 3)
+                                    {
+                                        <td>
+                                            <a id="updateIcon" onclick="updateSalesOrder('@item.SalesOrderID',@i);"
+                                               data-index="@item.SalesOrderID" data-toggle="modal" data-target="#UpdateSalesOrderModal">
+                                                <img src="~/Images/EDIT.png" alt="EDIT" height=15 width=18 style="margin-top:2px;" />
+                                            </a>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+                                    @*----------UPDATE BUTTON END HERE--------*@
+                                    @*<img src="~/Images/EDIT.png" alt="EDIT" height=15 width=18 style="margin-top:2px;" />*@
+                                    <td>
+                                        @item.SalesOrderID
+                                    </td>
+                                    <td>
+                                        @try
+                                        {
+                                            @Html.Hidden(item.AccountID)
+                                            @item.AccountName
+                                        }
+                                        catch (Exception e)
+                                        {
+                                        }
+                                    </td>
+                                    <td>
+                                        @item.SalesOrderCreationDate
+                                    </td>
+                                    <td>
+                                        <center>
+                                            @Convert.ToDateTime(item.RequestedDate).ToShortDateString()
+                                        </center>
+                                    </td>
+                                    <td>
+                                        @{
+                                            try
+                                            {
+                                                Html.Hidden(item.SupplierID);
+                                            }
+                                            catch
+                                            {
+
+                                            }
+                                        }
+
+                                        @item.SupplierName
+                                    </td>
+                                    <td>
+                                        @Convert.ToDecimal(@item.SalesOrderAmount).ToString("#,##0.00")
+                                    </td>
+                                    <td>
+                                        @*ADDED THIS TO DISPLAY ERRORS WHEN TRANSACTION STATUS == PENDING*@
+                                        @*ADDED BY: MAE ROSE BIBIT - 02-16-2018*@
+                                        @if (item.TransactionStatusID == 5 || item.TransactionStatusID == 6)
+                                        {
+                                            @*<a data-toggle="modal" href="#errorsModal">@item.TransactionStatus</a>*@
+                                            <a href="#" onclick="retrieveErrors('@item.SalesOrderID','@item.TransactionStatusID')">@item.TransactionStatusDescription</a>
+                                        }
+                                        else
+                                        {
+                                            @item.TransactionStatusDescription
+                                        }
+                                        @*ADDED BY: MAE ROSE BIBIT - 02-16-2018*@
+                                    </td>
+                                    <td>
+                                        @item.SAP_Status
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td><strong>Remarks:</strong></td>
+                                    <td colspan="6">
+                                        @Html.Label(item.Comments)
+                                    </td>
+                                </tr>
+                                i++;
+                            }
+                        }
+                    </tbody>
+                </table>
+                @*}*@
+            </div>
+        </div>
+        @using (Html.BeginForm("SalesOrderInsert", "SalesOrder", FormMethod.Post, new { id = "InsertSalesOrderForm" }))
+        {
+            <div class="modal fade" id="AddSalesOrderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="margin-left:-200px;">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background-color: #363636 !important">
+                            <h6 class="modal-title text-center" id="exampleModalLabel" style="text-align:center;"><strong>NEW SALES ORDER</strong></h6>
+
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div style="background-image: url('../../Images/allpagebg.jpg'); background-size: 100%; margin:20px 20px 30px 20px; width:96%; height:43%; padding:0px; box-shadow: 0px 2.5px 5px 1px grey;">
+                            <div class="modal-header" style="width: 100%; height: 40px; background-color: #363636; padding:0px;">
+                                <h7 id="exampleModalLabel" style="color:white; margin:10px;">Sales Order Information</h7>
+                            </div>
+
+                            <div class="form-group row" style="margin:20px 10px 10px 10px;" hidden>
+                                <div class="col-md-3">
+                                    <input type="text" placeholder="SO00001" name="SalesOrderID" id="SalesOrderID"
+                                           style="height:10%; width:100%; background-color:#FFFEDD" disabled />
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" placeholder="Creation Date" name="SalesOrderCreationDate" id="SalesOrderCreationDate"
+                                           style="height:10%; width:100%; background-color:#FFFEDD" disabled />
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" placeholder="Transaction Status" name="TransactionStatus" id="TransactionStatus"
+                                           style="height:10%; width:100%; background-color:#FFFEDD" disabled />
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" placeholder="Sales Order Status" name="SalesOrderCreationDate" id="SalesOrderCreationDate"
+                                           style="height:10%; width:100%; background-color:#FFFEDD" disabled />
+                                </div>
+                            </div>
+
+                            <div class="form-group row" style="margin:25px 10px 10px 10px;">
+                                <div class="col-md-6">
+                                    <div>
+                                        <input type="text" class="inputText" name="AccountName" id="AccountName" list="customerlist"
+                                               style="height:10%; width:100%;" required />
+                                        <span class="floating-label">Account Name</span>
+                                    </div>
+                                    <div>
+                                        <datalist id="customerlist"></datalist>
+                                        <input type="text" hidden id="selectedAccount" name="selectedAccount" />
+                                        <input type="text" hidden id="cgroupcode" name="cgroupcode" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3" style="display: none;">
+                                    <div>
+                                        <datalist id="personlist"></datalist>
+                                        <input type="text" hidden id="selectedPerson" name="selectedPerson" />
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <div>
+                                        <input type="text" name="paymenttermslist" id="paymenttermslist" list="termslist"
+                                               style="height:10%; width:100%;" required />
+                                        <span class="floating-label">Payment Terms</span>
+                                    </div>
+                                    <div>
+                                        <datalist id="termslist"></datalist>
+                                        <input type="text" hidden id="selectedTerm" name="selectedTerm" />
+                                    </div>
+
+
+                                </div>
+                                <div class="col-md-3">
+                                    <div>
+                                        <input type="text" name="RequestedDate" id="RequestedDate"
+                                               style="height:10%; width:100%;" data-date-format="mm-dd-yyyy" required />
+                                        <span class="floating-label">Requested Delivery Date</span>
+                                    </div>
+                                </div>
+                                @*}*@
+                            </div>
+
+                            <div class="form-group row" style="margin:25px 10px 10px 10px;">
+                                <div class="col-md-6">
+                                    <div>
+                                        <input type="text" name="shippingaddress" id="shippingaddress" list="addresslist"
+                                               style="height:10%; width:100%;" required />
+                                        <span class="floating-label">Ship-To Address</span>
+                                    </div>
+                                    <div>
+                                        <datalist id="addresslist"></datalist>
+                                        <input type="text" hidden id="selectedAddress" name="selectedAddress" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div id="supplierDiv">
+                                        <input type="text" name="SupplierAuto" id="SupplierAuto" list="supplierlist" oninput="inputSupplier()"
+                                               style="height:10%; width:100%;" required />
+                                        <span class="floating-label">Supplier</span>
+                                    </div>
+                                    <div>
+                                        <datalist id="supplierlist"></datalist>
+                                        <input type="text" hidden id="selectedSupplier" name="selectedSupplier" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row" style="margin:25px 10px 10px 10px;">
+                                <div class="col-md-6">
+                                    <div>
+                                        <input type="text" name="Comments" id="Comments"
+                                               style="height:10%; width:100%;" required />
+                                        <span class="floating-label" style="bottom: 10px;">Comments</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div>
+                                        <input type="text" name="ExternalReference" id="ExternalReference"
+                                               style="height:10%; width:100%;" required />
+                                        <span class="floating-label" style="bottom: 10px;">External Reference</span>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-3">
+                                    <span class="plain-select" style="width:210px; bottom: 5px;">
+                                        <select id="selection" name="Description" class="MainSelect">
+                                            <option value="" readonly selected>Account Type</option>
+                                            <option value="Regular">Regular</option>
+                                            <option value="GuaranteedAccount">Guaranteed Account</option>
+                                            <option value="InitialStock">Initial Stock</option>
+                                        </select>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div style="background-image: url('../../Images/allpagebg.jpg'); background-size: 100%; margin: -10px 20px 5px 20px; width:96%; height:40%; box-shadow: 0px 2.5px 5px 1px grey;">
+                            <div class="modal-header" style=" width: 100%; height:40px; background-color: #363636; padding:0px;">
+                                <h7 id="exampleModalLabel" style="color:white; margin:10px;">Items</h7>
+                            </div>
+
+                            <div class="col-2 col-md-5">
+                                <div class="form-group">
+                                    <input type="button" value="Add Items" class="addproduct btn btn-main" id="addproduct" name="addproduct"
+                                           style="margin-top:7.5px; box-shadow: 0px 2.5px 5px -2px grey; font-size: 80%;" />
+
+                                    <input type="button" value="Remove" class="deleteRow btn btn-main" id="deleteRow" name="deleteRow"
+                                           style="margin-top:7.5px; box-shadow: 0px 2.5px 5px -2px grey; font-size: 80%;" />
+
+                                    <input type="button" value="Edit" class="btn btn-main"
+                                           style="margin-top:7.5px; box-shadow: 0px 2.5px 5px -2px grey; font-size: 80%;" hidden />
+                                </div>
+                            </div>
+
+                            <div class="row" style="overflow:auto; margin:10px 1px 10px 1px; height:70%;">
+                                <div class="col">
+                                    <table class="itemlist table table-striped table-hover" id="salesorderlinetable" style="max-width:150%; width:150%">
+                                        <thead>
+                                            <tr>
+                                                <td width="1%"></td>
+                                                <td style="color:darkgrey;" width="2%">Line No.</td>
+                                                <td style="color:darkgrey;">Product ID</td>
+                                                <td style="color:darkgrey;" width="20%">Product Description</td>
+                                                <td style="color:darkgrey;" width="7%">UoM</td>
+                                                <td style="color:darkgrey;" width="5%">Quantity</td>
+                                                <td style="color:darkgrey;" width="5%">Free Goods</td>
+                                                <td style="color:darkgrey;">Unit Price</td>
+                                                <td style="color:darkgrey;">Gross Amount</td>
+                                                <td style="color:darkgrey;">Discount Amount</td>
+                                                <td style="color:darkgrey;">Net Price</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="mytbody"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="float-right">
+                                <div class="form-group row" style="padding:10px 150px 0px 0px;">
+                                    <center>
+                                        <label style="color:darkgrey; white-space:nowrap;">
+                                            Gross Amount:
+                                        </label>
+                                        <input type="text" placeholder="0.00" id="totalNetDisplay" name="totalNetDisplay"
+                                               style="height:3%; background-color:#FFFEDD;" readonly />
+                                        <input type="text" placeholder="0.00" id="totalNet" name="totalNet"
+                                               style="height:3%; background-color:#FFFEDD;" hidden />
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="float-right">
+                                <div class="form-group row" style="padding:10px 150px 0px 0px;">
+                                    <center>
+                                        <label style="color:darkgrey; white-space:nowrap;">
+                                            Discount 1 Amount:
+                                        </label>
+                                        <input type="text" step='any' placeholder="0" id="disc1amntDisplay" name="disc1amntDisplay"
+                                               style="height:3%;" />
+                                        <input type="number" step='any' placeholder="0" id="disc1amnt" name="disc1amnt"
+                                               style="height:3%;" hidden />
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="float-right">
+                                <div class="form-group row" style="padding:10px 150px 0px 0px;">
+                                    <center>
+                                        <label style="color:darkgrey; white-space:nowrap;">
+                                            Discount 2 Amount:
+                                        </label>
+                                        <input type="text" step='any' placeholder="0" id="disc2amntDisplay" name="disc2amntDisplay"
+                                               style="height:3%;" />
+                                        <input type="number" step='any' placeholder="0" id="disc2amnt" name="disc2amnt"
+                                               style="height:3%;" hidden />
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="float-right">
+                                <div class="form-group row" style="padding:10px 150px 0px 0px;">
+                                    <center>
+                                        <label style="color:darkgrey; white-space:nowrap;">
+                                            Net Amount:
+                                        </label>
+                                        <input type="text" placeholder="0.00" id="totalOverallDisplay" name="totalOverallDisplay"
+                                               style="height:3%; background-color:#FFFEDD;" readonly />
+                                        <input type="text" placeholder="0.00" id="totalOverall" name="totalOverall"
+                                               style="height:3%; background-color:#FFFEDD;" hidden />
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="modal-body" style="height:5%;">
+                            <center>
+                                <div class="form-row">
+
+                                    <div class="form-group col-sm-6">
+                                        <button type="submit" class="btn btn-modal" style="width:80%;">Save</button>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <button type="button" class="btn btn-modal" style="width:80%;" id="cancelBtn" data-dismiss="modal">Cancel</button>
+                                    </div>
+                                </div>
+                            </center>
+                            @*}*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!--UPDATE FORM STARTS HERE-->
+        @using (Html.BeginForm("SalesOrderUpdate", "SalesOrder", FormMethod.Post, new { id = "UpdateSalesOrderForm" }))
+        {
+            <div class="modal fade" id="UpdateSalesOrderModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true" style="margin-left:-200px;">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background-color: #363636 !important">
+                            <h6 class="modal-title text-center" id="updateModalLabel" style="text-align:center;"><strong>UPDATE SALES ORDER</strong></h6>
+
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div style="background-image: url('../../Images/allpagebg.jpg'); background-size: 100%; margin:20px 20px 30px 20px; width:96%; height:43%; padding:0px; box-shadow: 0px 2.5px 5px 1px grey;">
+                            <div class="modal-header" style="width: 100%; height: 40px; background-color: #363636; padding:0px;">
+                                <h7 id="updateModalLabel" style="color:white; margin:10px;">Sales Order Information</h7>
+                            </div>
+
+                            <div class="form-group row" style="margin:20px 10px 10px 10px;">
+                                <div class="col-md-3">
+                                    <div style="pointer-events: none;">
+                                        <input type="text" name="updateSalesOrderID" id="updateSalesOrderID"
+                                               style="height:10%; width:100%; background-color:#FFFEDD" required />
+                                        <span class="floating-label">Sales Order ID</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div style="pointer-events: none;">
+                                        <input type="text" name="updateSalesOrderCreationDate" id="updateSalesOrderCreationDate"
+                                               style="height:10%; width:100%; background-color:#FFFEDD" required />
+                                        <span class="floating-label">Creation Date</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    @Html.DropDownList("updateTransactionStatus", ViewBag.TransactionStatus as SelectList, "Transaction Status", new { id = "updateTransactionStatus", @class = "MainSelect" })
+                                    @*<select name="updateTransactionStatus" id="updateTransactionStatus"
+                                                style="height:10%; width:100%;" class="MainSelect">
+                                            <option value="New">New</option>
+                                            <option value="Validated">Validated</option>
+                                            <option value="Processed" readonly>Processed</option>
+                                            <option value="Pending">Pending</option>
+                                            <option value="Completed" readonly>Completed</option>
+                                        </select>*@
+                                </div>
+                                <div class="col-md-3">
+                                    <div style="pointer-events: none;">
+                                        <input type="text" name="updateSalesOrderStatus" id="updateSalesOrderStatus"
+                                               style="height:10%; width:100%; background-color:#FFFEDD" />
+                                        <span class="floating-label">Sales Order Status</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row" style="margin:25px 10px 10px 10px;">
+                                @{
+                                    ViewBag.Customers = TempData["itemcustomers"];
+                                    <div class="col-md-6">
+                                        <div>
+                                            <input type="text" name="updateAccountName" id="updateAccountName" list="updateCustomerlist"
+                                                   style="height:10%; width:100%;" required />
+                                            <span class="floating-label">Account Name</span>
+                                        </div>
+                                        <div>
+                                            <input type="text" hidden id="updateAccountID" name="updateAccount" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div>
+                                            <input type="text" name="updatePaymentTerms" id="updatePaymentTerms" list="updatetermslist"
+                                                   style="height:10%; width:100%;" required />
+                                            <span class="floating-label">Payment Terms</span>
+                                        </div>
+                                        <div>
+                                            <datalist id="updatetermslist"></datalist>
+                                            <input type="text" hidden id="updateSelectedTerm" name="updateSelectedTerm" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div style="pointer-events: none;">
+                                            <input type="text" name="updateRequestedDate" id="updateRequestedDate"
+                                                   style="height:10%; width:100%;" required />
+                                            <span class="floating-label">Requested Delivery Date</span>
+                                        </div>
+
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="form-group row" style="margin:25px 10px 10px 10px;">
+                                <div class="col-md-6">
+                                    <div>
+                                        <input type="text" name="updateShipToAddress" id="updateShipToAddress" list="updateaddresslist"
+                                               style="height:10%; width:100%;" required />
+                                        <span class="floating-label">Shipping Address</span>
+                                    </div>
+                                    <div>
+                                        <datalist id="updateaddresslist"></datalist>
+                                        <input type="text" hidden id="updateSelectedAddress" name="updateSelectedAddress" />
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div style="pointer-events: none;">
+                                        <input type="text" ame="updateSupplier" id="updateSupplier"
+                                               style="height:10%; width:100%;" required />
+                                        <span class="floating-label">Supplier</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row" style="margin:25px 10px 10px 10px;">
+                                <div class="col-md-6">
+                                    <div>
+                                        <input type="text" name="updateComments" id="updateComments"
+                                               style="height:10%; width:100%;" required />
+                                        <span class="floating-label">Comments</span>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-3">
+                                    <div>
+                                        <input type="text" name="updateExternalReference" id="updateExternalReference"
+                                               style="height:10%; width:100%;" required />
+                                        <span class="floating-label">External Reference</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div>
+                                        <input type="text" name="updateDescription" id="updateDescription"
+                                               style="height:10%; width:100%;" required />
+                                        <span class="floating-label">Description</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="background-image: url('../../Images/allpagebg.jpg'); background-size: 100%; margin: -10px 20px 5px 20px; width:96%; height:40%; padding:0px; box-shadow: 0px 2.5px 5px 1px grey;">
+                            <div class="modal-header" style="width: 100%; height: 40px; background-color: #363636; padding:0px;">
+                                <h7 id="updateModalLabel" style="color:white; margin:10px;">Items</h7>
+                            </div>
+
+                            <div class="col-2 col-md-5">
+                                <div class="form-group">
+                                    <input type="button" class="btn btn-main" style="margin-top:7.5px; box-shadow: 0px 2.5px 5px -2px grey; font-size: 80%;" value="Add" onclick="addOrderLine()" />
+
+                                    <input type="button" class="btn btn-main" style="margin-top:7.5px; box-shadow: 0px 2.5px 5px -2px grey; font-size: 80%;" value="Remove" onclick="removeOrderLine()" />
+
+                                    <input type="button" class="btn btn-main" style="margin-top:7.5px; box-shadow: 0px 2.5px 5px -2px grey; font-size: 80%;" value="Edit" onclick="editOrderLine()" />
+                                </div>
+                            </div>
+
+                            <div class="row" style="overflow:auto; margin:10px 1px 10px 1px; height:70%;">
+                                <div class="col">
+                                    <table id="updateItemsTable" class="table table-striped table-hover" style="max-width:150%; width:150%">
+                                        <thead>
+                                            <tr>
+                                                <td width="1%"></td>
+                                                <td style="color:darkgrey;" width="2%">Line No.</td>
+                                                <td style="color:darkgrey;">Product ID</td>
+                                                <td style="color:darkgrey;" width="20%">Product Description</td>
+                                                <td style="color:darkgrey;" width="7%">UoM</td>
+                                                <td style="color:darkgrey;" width="5%">Quantity</td>
+                                                <td style="color:darkgrey;" width="5%">Free Goods</td>
+                                                <td style="color:darkgrey;">Unit Price</td>
+                                                <td style="color:darkgrey;">Gross Amount</td>
+                                                <td style="color:darkgrey;">Discount Amount</td>
+                                                <td style="color:darkgrey;">Net Price</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="float-right">
+                                <div class="form-group row" style="padding:10px 150px 0px 0px;">
+                                    <center>
+                                        <label style="color:darkgrey; white-space:nowrap;">
+                                            Gross Amount:
+                                        </label>
+                                        <input type="text" placeholder="0.00" id="totalNetVal" name="totalNetVal"
+                                               style="height:3%; background-color:#FFFEDD;" disabled />
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="float-right">
+                                <div class="form-group row" style="padding:10px 150px 0px 0px;">
+                                    <center>
+                                        <label style="color:darkgrey; white-space:nowrap;">
+                                            Discount 1 Amount:
+                                        </label>
+                                        <input type="text" placeholder="0" id="disc1amntVal" name="disc1amntVal"
+                                               style="height:3%;" />
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="float-right">
+                                <div class="form-group row" style="padding:10px 150px 0px 0px;">
+                                    <center>
+                                        <label style="color:darkgrey; white-space:nowrap;">
+                                            Discount 2 Amount:
+                                        </label>
+                                        <input type="text" placeholder="0" id="disc2amntVal" name="disc2amntVal"
+                                               style="height:3%;" />
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="float-right">
+                                <div class="form-group row" style="padding:10px 150px 0px 0px;">
+                                    <center>
+                                        <label style="color:darkgrey; white-space:nowrap;">
+                                            Net Amount:
+                                        </label>
+                                        <input type="text" placeholder="0.00" id="totalOverallVal" name="totalOverallVal"
+                                               style="height:3%; background-color:#FFFEDD;" disabled />
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-body" style="height:5%;">
+                            <center>
+                                <div class="form-row">
+
+                                    <div class="form-group col-sm-6">
+                                        <button type="submit" class="btn btn-modal" style="width:80%;">Save</button>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <input type="button" class="btn btn-modal" data-dismiss="modal" style="width:80%;" value="Cancel" />
+
+                                    </div>
+
+                                </div>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+
+        <!--ADDED: 02_16_2018 MODAL TO SHOW THE ERRORS-->
+        @*ADDED BY: MAE ROSE BIBIT - 02-16-2018*@
+        <div class="modal fade" id="errorsModal" tabindex="-1" role="dialog" aria-labelledby="erorsModalLabel" aria-hidden="true" style="margin-left:-200px;">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title text-center" id="erorsModalLabel" style="text-align:center;"><strong>SALES ORDER ERROR/S</strong></h6>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <table id="errorsTable" class="table table-responsive">
+                            <thead>
+                                <tr>
+                                    <td style="width: 5% !important; text-align: center; font-weight:bold;">Line #</td>
+                                    <td style="width: 40% !important; text-align: center; font-weight:bold;">Description</td>
+                                    <td style="width: 10% !important; text-align: center; font-weight:bold;">Date</td>
+                                    <td style="width: 10% !important; text-align: center; font-weight:bold;">Create By</td>
+                                </tr>
+                            </thead>
+                            <tbody id="errorsBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--MODAL TO SHOW THE ERRORS ENDS HERE-->
+        <!-- Modal WHEN SUCCESSFULLY UPDATED -->
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Update Sales Order</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>@TempData["transactionStat"]</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--20180219.JJ.S Added pagination to the view-->
+
+        @Html.PagedListPager(Model, page => Url.Action("", new { page }),
+                                     new PagedListRenderOptions() { Display = PagedListDisplayMode.IfNeeded })
+
+
+        <!--20180219.JJ.E-->
+        <!--END TAG MODAL TO SHOW THE ERRORS-->
+    </div>
+
+    @* ================================== *@
+    @* -- FOR UPLOADING OF SALES ORDER -- *@
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "submitExcelUpload", enctype = "multipart/form-data" }))
+    {
+        <div class="modal fade" id="UploadSalesOrderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="width: 30% !important; margin-left:auto; margin-right: auto;">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: #363636 !important">
+                        <h6 class="modal-title text-center" id="exampleModalLabel" style="text-align:center;"><strong>UPLOAD SALES ORDER</strong></h6>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body" style="height:25%;">
+                        <center>
+                            <div class="form-row">
+
+                                <div id="ErrorRequired" class="alert alert-danger alert-dismissible"  role="alert" style="display:none; width: 80%; margin-left: -3%;">
+                                    <strong>Error!</strong> <font id="errormessageforall"> </font>
+                                </div>
+                                <table style="width: 80%; height: 80%; margin-left: -25%; margin-top: 5%;">
+                                    <tr>
+                                        <td colspan="5">
+                                            <input name="file" id="file" type="file" accept=".xls, .xlsx, .xlsm" style="margin-left: 0%; width: 100%;" />
+                                        </td>
+                                    </tr>
+                                    <tr></tr>
+                                    <tr>
+                                        <td style="width: 50%;">
+                                            <center>
+                                                <input type="button" class="btn btn-main" value="Download Template"
+                                                       style="width:100%; white-space:nowrap; box-shadow: 0px 2.5px 5px -2px grey;"
+                                                       onclick="window.location.href='@Url.Action("DownloadTemplate", "SalesOrder", new { importToRun = "SO_UploadTemplate" })'" />
+                                            </center>
+                                        </td>
+                                        <td style="width: 50%;">
+                                            <center>
+                                                <button class="btn btn-main" type="button" onclick="uploadExcel()"
+                                                        style="width:70%; box-shadow: 0px 2.5px 5px -2px grey;">
+                                                    Save
+                                                </button>
+                                            </center>
+                                        </td>
+                                        <td style="width: 50%;">
+                                            <center>
+                                                <button class="btn btn-main" type="submit" data-dismiss="modal"
+                                                        style="width:100%; box-shadow: 0px 2.5px 5px -2px grey;">
+                                                    Cancel
+                                                </button>
+
+
+                                            </center>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <script>
+        function uploadExcel() {
+            var filename = document.getElementById("file").value;
+            var extensionName = filename.slice(-4);
+
+            if (filename != null && filename != "") {
+
+                if (extensionName != ".xls" && extensionName != "xlsx" && extensionName != "xlsm") {
+                    document.getElementById("errormessageforall").innerHTML = "Only excel files have allowed to upload";
+                    document.getElementById('ErrorRequired').style.display = "block";
+                }
+                else {
+                    document.getElementById("submitExcelUpload").submit();
+                }
+            }
+            else {
+                document.getElementById("errormessageforall").innerHTML = "Please choose a file";
+                document.getElementById('ErrorRequired').style.display = "block";
+            }
+        }
+    </script>
+    @* -- FOR UPLOADING OF SALES ORDER -- *@
+    @* ================================== *@
+
+    @*--SCRIPT FOR GETTING ACCOUNTS FOR FILTERING--*@
+    <script>
+        $(document).ready(function () {
+            //alert($("#customernamelist").val());
+            var Customers = {};
+            Customers.url = "/SalesOrder/GetAccounts";
+            Customers.type = "POST";
+            Customers.data = JSON.stringify({});
+            Customers.datatype = "json";
+            Customers.contentType = "application/json";
+            Customers.success = function (CustomerList) {
+                //alert("SUCCESS!");
+                $.each(CustomerList, function (index, optiondata) {
+                    $("#filteraccntlist").append("<option data-value='" + optiondata.Value + "' value='" + optiondata.Text + "'></option>");
+                });
+
+                $("#filteraccntlist").prop("disabled", false);
+            };
+            Customers.error = function () { alert("Cannot Retrieve Customers"); };
+            $.ajax(Customers);
+
+            $("#filterAccntName").on('input', function () {
+                var val = this.value;
+                var newVal = val;
+
+                if (newVal.length == 0) {
+
+                }
+                else {
+                    if ($('#filteraccntlist option').filter(function () {
+                        return this.value === val;
+                    }).length) {
+                        //send ajax request
+                        var value = this.value;
+
+                        $("#selectedAccountfilter").val($('#filteraccntlist [value="' + value + '"]').data('value'));
+                    }
+                }
+            });
+        });
+    </script>
+
+    @*--SCRIPT FOR GETTING SUPPLIERS FOR FILTERING--*@
+    <script>
+        $(document).ready(function () {
+            $("#Supplier").change(function () {
+                var val = this.value;
+                var newVal = val;
+
+                if (newVal.length == 0) {
+
+                }
+                else {
+                    if ($('#Supplier option').filter(function () {
+                        return this.value === val;
+                    }).length) {
+                        //send ajax request
+                        var value = this.value;
+                        $("#selectedSupplierfilter").val($('#Supplier [value="' + value + '"]').data('value'));
+                    }
+                }
+            });
+        });
+    </script>
+
+    @*--DELETING ROW IN SALES ORDER LINE FORM--*@
+    <script>
+        $(document).ready(function () {
+            $(".deleteRow").click(function () {
+                $("table#salesorderlinetable tbody").find('input[name="selectedRow"]').each(function () {
+                    if ($(this).is(":checked")) {
+                        $(this).parents("tr[name='rowForSOLine']").remove();
+                    }
+                });
+                event.preventDefault();
+            });
+        });
+    </script>
+
+    @*--SCRIPT FOR GETTING ACCOUNTS // ACCOUNT PERSONS // SHIPPING ADDRESS--*@
+    <script>
+        $(document).ready(function () {
+            //alert($("#customernamelist").val());
+            var Customers = {};
+            Customers.url = "/SalesOrder/GetAccounts";
+            Customers.type = "POST";
+            Customers.data = JSON.stringify({});
+            Customers.datatype = "json";
+            Customers.contentType = "application/json";
+            Customers.success = function (CustomerList) {
+                //alert("SUCCESS!");
+                $("#customerlist").empty();
+                $.each(CustomerList, function (index, optiondata) {
+                    $("#customerlist").append("<option data-value='" + optiondata.Value + "' value='" + optiondata.Text + "'></option>");
+                });
+            };
+            Customers.error = function () { alert("Cannot Retrieve Customers"); };
+            $.ajax(Customers);
+
+            $("#AccountName").on('input', function () {
+                var val = this.value;
+                var newVal = val;
+
+                if (newVal.length == 0) {
+
+                }
+                else {
+                    if ($('#customerlist option').filter(function () {
+                        return this.value === val;
+                    }).length) {
+                        //send ajax request
+                        var value = this.value;
+                        //alert('This.Value: ' + this.value + " == Val: " + val);
+
+                        $("#selectedAccount").val($('#customerlist [value="' + value + '"]').data('value'));
+                        if ($("#selectedAccount").val().length != 0) {
+                            var ShippingAddress = {};
+                            ShippingAddress.url = "/SalesOrder/GetShippingAddress";
+                            ShippingAddress.type = "POST";
+                            ShippingAddress.data = JSON.stringify({ account: $("#selectedAccount").val() });
+                            ShippingAddress.datatype = "json";
+                            ShippingAddress.contentType = "application/json";
+                            ShippingAddress.success = function (CustomerList) {
+                                //alert("SUCCESS!");
+                                $("#addresslist").empty();
+                                $.each(CustomerList, function (index, optiondata) {
+                                    //alert('Ship-To');
+                                    if (optiondata.DefaultShipTo == "X") {
+                                        $("#addresslist").append("<option data-value='" + optiondata.ShippingAddressID +
+                                            "' value='" + optiondata.ShippingAddress + " selected'></option>");
+                                        $("#shippingaddress").val(optiondata.ShippingAddress);
+                                        $("#selectedAddress").val(optiondata.ShippingAddressID);
+                                        //alert('IF SHIP-TO');
+                                    }
+                                    else {
+                                        //alert('ELSE SHIP-TO');
+                                        $("#addresslist").append("<option data-value='" + optiondata.ShippingAddressID +
+                                            "' value='" + optiondata.ShippingAddress + "'></option>");
+                                        $("#selectedAddress").val(optiondata.ShippingAddressID);
+                                    }
+                                });
+                                $("#Comments").prop("required", false);
+                                $("#ExternalReference").prop("required", false);
+                                $("#addresslist").prop("disabled", false);
+                            };
+                            ShippingAddress.error = function () { alert("Cannot Retrieve Contact Persons..."); };
+                            $.ajax(ShippingAddress);
+                        }
+                    } else {
+                        //alert('Account does not Exist!');
+                    }
+                }
+            });
+
+            $("#AccountName").on('input', function () {
+                var val = this.value;
+                var newVal = val;
+
+                if (newVal.length == 0) {
+
+                }
+                else {
+                    //send ajax request
+                    var value = this.value;
+                    $("#selectedAccount").val($('#customerlist [value="' + value + '"]').data('value'));
+                    if ($("#selectedAccount").val().length != 0) {
+                        var ShippingAddress = {};
+                        ShippingAddress.url = "/SalesOrder/GetPaymentTerm";
+                        ShippingAddress.type = "POST";
+                        ShippingAddress.data = JSON.stringify({ account: $("#selectedAccount").val() });
+                        ShippingAddress.datatype = "json";
+                        ShippingAddress.contentType = "application/json";
+                        ShippingAddress.success = function (CustomerList) {
+                            $("#paymenttermslist").val(CustomerList[0].PaymentDescription);
+                            $("#selectedTerm").val(CustomerList[0].PaymentTermsID);
+
+                        };
+
+                        ShippingAddress.error = function () { alert("Cannot Retrieve Contact Persons..."); };
+                        $.ajax(ShippingAddress);
+                    }
+                    //}
+                }
+            });
+
+            $("#AccountName").on('input', function () {
+                var val = this.value;
+                var newVal = val;
+
+                if (newVal.length == 0) {
+
+                }
+                else {
+                    var value = this.value;
+                    $("#selectedAccount").val($('#customerlist [value="' + value + '"]').data('value'));
+                    if ($("#selectedAccount").val().length != 0) {
+                        var Accounts = {};
+                        Accounts.url = "/SalesOrder/GetCustomerGroupCode";
+                        Accounts.type = "POST";
+                        Accounts.data = JSON.stringify({ account: $("#selectedAccount").val() });
+                        Accounts.datatype = "json";
+                        Accounts.contentType = "application/json";
+                        Accounts.success = function (AccountsList) {
+                            $.each(AccountsList, function (index, optiondata) {
+                                $("#cgroupcode").val(optiondata.CustomerGroupCode);
+                                //alert('Group Code: ' + optiondata.CustomerGroupCode);
+                            });
+                        };
+                        Accounts.error = function () { alert("Cannot Retrieve Contact Persons..."); };
+                        $.ajax(Accounts);
+                    }
+                }
+            });
+        });
+
+        $("#shippingaddress").on('input', function () {
+            var val = this.value;
+            var newVal = val;
+
+            if (newVal.length == 0) {
+
+            }
+            else {
+                if ($('#addresslist option').filter(function () {
+                    return this.value === val;
+                }).length) {
+                    //send ajax request
+                    var value = this.value;
+                    $("#selectedAddress").val($('#addresslist [value="' + value + '"]').data('value'));
+                }
+                else {
+                    //alert("Not in the selection")
+                }
+            }
+        });
+
+    </script>
+
+    @*--SCRIPT FOR PUTTING VALUE IN SELECTED PAYMENT TERMS--*@
+    <script>
+        $(document).ready(function () {
+            var Terms = {};
+            Terms.url = "/SalesOrder/GetPaymentTerms";
+            Terms.type = "POST";
+            Terms.data = JSON.stringify({});
+            Terms.datatype = "json";
+            Terms.contentType = "application/json";
+            Terms.success = function (TermList) {
+                //$.each(TermList, function (index, optiondata) {
+                //    $("#termslist").append("<option data-value='" + optiondata.Value + "' value='" + optiondata.Text + "'></option>");
+                //});
+
+                //$("#termslist").prop("disabled", false);
+            };
+            Terms.error = function () { alert("Cannot Retrieve Payment Terms"); };
+            $.ajax(Terms);
+
+            $("#paymenttermslist").on('input', function () {
+                var val = this.value;
+                var newVal = val;
+
+                if (newVal.length == 0) {
+
+                }
+                else {
+                    if ($('#termslist option').filter(function () {
+                        return this.value === val;
+                    }).length) {
+                        //send ajax request
+                        var value = this.value;
+
+                    }
+
+                    $("#selectedTerm").val($('#termslist [value="' + value + '"]').data('value'));
+                }
+            });
+        });
+    </script>
+
+    @*--SCRIPT FOR GETTING VALUE OF SUPPLIERS AND PUTTING VALUE IN SELECTED SUPPLIER--*@
+    <script>
+        $(document).ready(function () {
+            //alert($("#customernamelist").val());
+            var Suppliers = {};
+            Suppliers.url = "/SalesOrder/GetSuppliers";
+            Suppliers.type = "POST";
+            Suppliers.data = JSON.stringify({});
+            Suppliers.datatype = "json";
+            Suppliers.contentType = "application/json";
+            Suppliers.success = function (SuppliersList) {
+                //alert("SUCCESS!");
+                $("#supplierlist").empty();
+                $.each(SuppliersList, function (index, optiondata) {
+                    $("#supplierlist").append("<option data-value='" + optiondata.Value + "' value='" + optiondata.Text + "'></option>");
+                });
+
+                $("#supplierlist").prop("disabled", false);
+            };
+            Suppliers.error = function () { alert("Cannot Retrieve Suppliers..."); };
+            $.ajax(Suppliers);
+
+            $("#SupplierAuto").on('input', function () {
+                //inputSupplier();
+                var val = this.value;
+                var newVal = val;
+
+                if (newVal.length == 0) {
+
+                }
+                else {
+                    if ($('#supplierlist option').filter(function () {
+                        return this.value === val;
+                    }).length) {
+                        //send ajax request
+                        var value = this.value;
+                        $("#selectedSupplier").val($('#supplierlist [value="' + value + '"]').data('value'));
+                        if ($("#selectedSupplier").val().length != 0) {
+                            var Products = {};
+                            Products.url = "/SalesOrder/GetProducts";
+                            Products.type = "POST";
+                            Products.data = JSON.stringify({ supplier: $("#selectedSupplier").val(), product: ("null") });
+                            Products.datatype = "json";
+                            Products.contentType = "application/json";
+                            Products.success = function (SupplierList) {
+                                $("#productdesclist").empty();
+                                $.each(SupplierList, function (index, optiondata) {
+                                    $("#productdesclist").append("<option data-value='" + optiondata.Value + "' value='" + optiondata.Text + "'></option>");
+                                });
+
+                                var optionValues = [];
+                                $('#productdesclist option').each(function () {
+                                    if ($.inArray(this.value, optionValues) > -1) {
+                                        $(this).remove()
+                                    } else {
+                                        optionValues.push(this.value);
+                                    }
+                                });
+                            };
+                            Products.error = function () { alert("Cannot Retrieve Products..."); };
+                            $.ajax(Products);
+                        }
+                    }
+                }
+            });
+
+            $("#SupplierAuto").on('input', function () {
+                var val = this.value;
+                var newVal = val;
+
+                if (newVal.length == 0) {
+
+                }
+                else {
+                    if ($('#supplierlist option').filter(function () {
+                        return this.value === val;
+                    }).length) {
+                        //send ajax request
+                        var value = this.value;
+                        $("#selectedSupplier").val($('#supplierlist [value="' + value + '"]').data('value'));
+                        if ($("#selectedSupplier").val().length != 0) {
+                            var Products = {};
+                            Products.url = "/SalesOrder/GetProductsID";
+                            Products.type = "POST";
+                            Products.data = JSON.stringify({ supplier: $("#selectedSupplier").val(), product: ("null") });
+                            Products.datatype = "json";
+                            Products.contentType = "application/json";
+                            Products.success = function (SupplierList) {
+                                $("#productidlist").empty();
+                                $.each(SupplierList, function (index, optiondata) {
+                                    $("#productidlist").append("<option data-value='" + optiondata.Value + "' value='" + optiondata.Text + "'></option>");
+                                });
+
+                                var optionValues = [];
+                                $('#productidlist option').each(function () {
+                                    if ($.inArray(this.value, optionValues) > -1) {
+                                        $(this).remove()
+                                    } else {
+                                        optionValues.push(this.value);
+                                    }
+                                });
+                            };
+                            Products.error = function () { alert("Cannot Retrieve Products..."); };
+                            $.ajax(Products);
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+    <script>
+        function inputSupplier() {
+            var tbRowCount = getTableRow();
+            if (parseInt(tbRowCount) > 0) {
+                var prod1 = $("#selectedProductDesc1").val();
+                if (prod1 == null || prod1.trim() == "") {
+                    populateProdDesc();
+                    populateProdID();
+                } else {
+                    if (confirm("Changing Supplier will removed all your products.\nAre you sure you want to Change Supplier?\n")) {
+                        $("#mytbody").empty();
+                        add1stRow();
+                    } else {
+
+                    }
+                }
+            } else {
+                //alert('Without tbRow');
+            }
+        }
+
+        function populateProdDesc() {
+            var val = $("#SupplierAuto").val();
+            var newVal = val;
+
+            if (newVal.length == 0) {
+
+            }
+            else {
+                if ($('#supplierlist option').filter(function () {
+                    return this.value === val;
+                }).length) {
+                    //send ajax request
+                    var value = this.value;
+                    $("#selectedSupplier").val($('#supplierlist [value="' + value + '"]').data('value'));
+                    if ($("#selectedSupplier").val().length != 0) {
+                        var Products = {};
+                        Products.url = "/SalesOrder/GetProducts";
+                        Products.type = "POST";
+                        Products.data = JSON.stringify({ supplier: $("#selectedSupplier").val(), product: ("null") });
+                        Products.datatype = "json";
+                        Products.contentType = "application/json";
+                        Products.success = function (SupplierList) {
+                            $("#productdesclist").empty();
+                            $.each(SupplierList, function (index, optiondata) {
+                                $("#productdesclist").append("<option data-value='" + optiondata.Value + "' value='" + optiondata.Text + "'></option>");
+                            });
+
+                            var optionValues = [];
+                            $('#productdesclist option').each(function () {
+                                if ($.inArray(this.value, optionValues) > -1) {
+                                    $(this).remove()
+                                } else {
+                                    optionValues.push(this.value);
+                                }
+                            });
+                        };
+                        Products.error = function () { alert("Cannot Retrieve Products..."); };
+                        $.ajax(Products);
+                    }
+                }
+            }
+        }
+
+        function populateProdID() {
+            var val = $("#SupplierAuto").val();
+            var newVal = val;
+
+            if (newVal.length == 0) {
+
+            }
+            else {
+                if ($('#supplierlist option').filter(function () {
+                    return this.value === val;
+                }).length) {
+                    //send ajax request
+                    var value = this.value;
+                    $("#selectedSupplier").val($('#supplierlist [value="' + value + '"]').data('value'));
+                    if ($("#selectedSupplier").val().length != 0) {
+                        var Products = {};
+                        Products.url = "/SalesOrder/GetProductsID";
+                        Products.type = "POST";
+                        Products.data = JSON.stringify({ supplier: $("#selectedSupplier").val(), product: ("null") });
+                        Products.datatype = "json";
+                        Products.contentType = "application/json";
+                        Products.success = function (SupplierList) {
+                            $("#productidlist").empty();
+                            $.each(SupplierList, function (index, optiondata) {
+                                $("#productidlist").append("<option data-value='" + optiondata.Value + "' value='" + optiondata.Text + "'></option>");
+                            });
+
+                            var optionValues = [];
+                            $('#productidlist option').each(function () {
+                                if ($.inArray(this.value, optionValues) > -1) {
+                                    $(this).remove()
+                                } else {
+                                    optionValues.push(this.value);
+                                }
+                            });
+                        };
+                        Products.error = function () { alert("Cannot Retrieve Products..."); };
+                        $.ajax(Products);
+                    }
+                }
+            }
+        }
+    </script>
+    @*--SCRIPT FOR GETTING VALUE OF SUPPLIERS AND PUTTING VALUE IN SELECTED SUPPLIER--*@
+
+    @*--SCRIPT FOR PUTTING VALUE IN SELECTED PAYMENT TERMS--*@
+    <script>
+        $(document).ready(function () {
+            var PaymentTerms = {};
+            PaymentTerms.url = "/SalesOrder/GetPaymentTerms";
+            PaymentTerms.type = "POST";
+            PaymentTerms.data = JSON.stringify({});
+            PaymentTerms.datatype = "json";
+            PaymentTerms.contentType = "application/json";
+            PaymentTerms.success = function (TermsList) {
+                $("#termslist").empty();
+                $.each(TermsList, function (index, optiondata) {
+                    $("#termslist").append("<option data-value='" + optiondata.Value + "' value='" + optiondata.Text + "'>" + optiondata.Text + "</option>");
+                });
+
+                $("#termslist").prop("disabled", false);
+            };
+            PaymentTerms.error = function () { alert("Cannot Retrieve Payment Terms"); };
+            $.ajax(PaymentTerms);
+        });
+    </script>
+
+    @*--SCRIPT FOR PRODUCT DETAILS--*@
+    <script>
+        function getUoMPrice(rowID) {
+            //alert('Success! rowID is ' + rowID);
+
+            var PriceList = {};
+            PriceList.url = "/SalesOrder/GetProductUoMPrice";
+            PriceList.type = "POST";
+            PriceList.data = JSON.stringify({ productid: $("#ProductID" + rowID).val(), uom: $("#uom" + rowID).val() });
+            PriceList.datatype = "json";
+            PriceList.contentType = "application/json";
+            PriceList.success = function (PriceList) {
+
+                $.each(PriceList, function (index, optiondata) {
+
+                    // -- UPDATED BY EUGENE SANTOS 20180220: CURRENCY FORMAT
+                    $('input#unitPrice' + rowID).val(optiondata.UnitPrice.toFixed(2));
+                    $('input#unitPriceDisplay' + rowID).val(numeral(optiondata.UnitPrice).format('0,0.00'));
+                    $('input#uom' + rowID).val(optiondata.UoM);
+
+                });
+            };
+            PriceList.error = function () { alert("Cannot Retrieve Products..."); };
+            $.ajax(PriceList);
+        }
+
+        function getProdDetails(rowID) {
+            var Products = {};
+            Products.url = "/SalesOrder/GetProducts";
+            Products.type = "POST";
+            Products.data = JSON.stringify({ supplier: $("#selectedSupplier").val(), product: ("null") });
+            Products.datatype = "json";
+            Products.contentType = "application/json";
+            Products.success = function (SupplierList) {
+            };
+            Products.error = function () { alert("Cannot Retrieve Products..."); };
+            $.ajax(Products);
+
+            var val = $('#ProductDesc' + rowID).val();
+            var newVal = val;
+
+            if (newVal.length == 0) {
+            }
+            else {
+
+                if ($('#productdesclist option').filter(function () {
+                    return this.value === val;
+                }).length) {
+                    var value = val;
+                    var displayproduct = $('datalist#productdesclist [value="' + value + '"]').data('value');
+
+                    var selectedProdID = $('datalist#productdesclist [value="' + value + '"]').data('value');
+
+                    $("input#selectedProductDesc" + rowID).val($('datalist#productdesclist [value="' + value + '"]').data('value'));
+
+                    if (selectedProdID.length != 0) {
+                        var selectedPrdID = selectedProdID;
+
+                        var UnitPrice = {};
+                        UnitPrice.url = "/SalesOrder/getUnitPrice";
+                        UnitPrice.type = "POST";
+                        UnitPrice.data = JSON.stringify({ Product: selectedPrdID });
+                        UnitPrice.datatype = "json";
+                        UnitPrice.contentType = "application/json";
+                        UnitPrice.success = function (prd) {
+
+                            $.each(prd, function (index, optiondata) {
+
+                                $('input#lineID' + (rowID)).val(rowID + 0);
+                                $('input#ProductID' + (rowID)).val(optiondata.ProductID);
+
+                                $("input#uom" + (rowID)).prop("disabled", false);
+                                $("input#quantity" + (rowID)).prop("disabled", false);
+                                $("input#discount" + (rowID)).prop("disabled", false);
+                                $("input#freeGood" + (rowID)).prop("disabled", false);
+                                $("input#salesorderlineAmount" + (rowID)).prop("disabled", false);
+                            })
+                        }
+                        $.ajax(UnitPrice);
+
+                        var Products = {};
+                        Products.url = "/SalesOrder/GetProductsUoM";
+                        Products.type = "POST";
+                        Products.data = JSON.stringify({ product: selectedPrdID });
+                        Products.datatype = "json";
+                        Products.contentType = "application/json";
+                        Products.success = function (CustomerList) {
+                            //alert("SUCCESS!");
+                            $("#uomlist").empty();
+                            $.each(CustomerList, function (index, optiondata) {
+                                //alert("SUCCESS! 1");
+                                $("#uomlist").append("<option data-value='" + optiondata.Value + "' value='" + optiondata.Text + "'></option>");
+                            });
+                        };
+                        Products.error = function () { alert("Cannot Retrieve Product UoM"); };
+                        $.ajax(Products);
+                    }
+                }
+            }
+            //});
+            //}
+        }
+
+        function getProdDetailsViaID(rowID) {
+            //alert('Success! rowID is ' + rowID);
+            var Products = {};
+            Products.url = "/SalesOrder/GetProducts";
+            Products.type = "POST";
+            Products.data = JSON.stringify({ supplier: $("#selectedSupplier").val(), product: ("null") });
+            Products.datatype = "json";
+            Products.contentType = "application/json";
+            Products.success = function (SupplierList) {
+            };
+            Products.error = function () { alert("Cannot Retrieve Products..."); };
+            $.ajax(Products);
+
+            var val = $('#ProductID' + rowID).val();
+            var newVal = val;
+
+            if (newVal.length == 0) {
+            }
+            else {
+
+                if ($('#productidlist option').filter(function () {
+                    return this.value === val;
+                }).length) {
+                    var value = val;
+                    var displayproduct = $('datalist#productidlist [value="' + value + '"]').data('value');
+
+                    var selectedProdID = $('datalist#productidlist [value="' + value + '"]').data('value');
+
+                    $("input#selectedProductID" + rowID).val($('datalist#productidlist [value="' + value + '"]').data('value'));
+
+                    if (selectedProdID.length != 0) {
+                        var selectedPrdID = selectedProdID;
+
+                        var UnitPrice = {};
+                        UnitPrice.url = "/SalesOrder/getUnitPrice";
+                        UnitPrice.type = "POST";
+                        UnitPrice.data = JSON.stringify({ Product: selectedPrdID });
+                        UnitPrice.datatype = "json";
+                        UnitPrice.contentType = "application/json";
+                        UnitPrice.success = function (prd) {
+
+                            $.each(prd, function (index, optiondata) {
+
+                                $('input#lineID' + (rowID)).val(rowID + 0);
+                                $('input#ProductDesc' + (rowID)).val(optiondata.ProductName);
+
+                                $("input#uom" + (rowID)).prop("disabled", false);
+                                $("input#quantity" + (rowID)).prop("disabled", false);
+                                $("input#discount" + (rowID)).prop("disabled", false);
+                                $("input#freeGood" + (rowID)).prop("disabled", false);
+                                $("input#salesorderlineAmount" + (rowID)).prop("disabled", false);
+                            })
+                        }
+                        $.ajax(UnitPrice);
+
+                        var Products = {};
+                        Products.url = "/SalesOrder/GetProductsUoM";
+                        Products.type = "POST";
+                        Products.data = JSON.stringify({ product: selectedPrdID });
+                        Products.datatype = "json";
+                        Products.contentType = "application/json";
+                        Products.success = function (CustomerList) {
+                            //alert("SUCCESS!");
+                            $("#uomlist").empty();
+                            $.each(CustomerList, function (index, optiondata) {
+                                //alert("SUCCESS! 1");
+                                $("#uomlist").append("<option data-value='" + optiondata.Value + "' value='" + optiondata.Text + "'></option>");
+                            });
+                        };
+                        Products.error = function () { alert("Cannot Retrieve Product UoM"); };
+                        $.ajax(Products);
+                    }
+                }
+            }
+            //});
+            //}
+        }
+    </script>
+
+    @*--SCRIPT FOR DATEPICKER--*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var d = new Date(),
+                date = ((d.getUTCMonth() + 1) + '-' + d.getUTCDate()) + '-' + (d.getUTCFullYear());
+
+            $('#RequestedDate').val(date);
+
+            $('#RequestedDate').datetimepicker({
+                weekStart: 1,
+                todayBtn: 1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                forceParse: 0,
+                showMeridian: 1,
+                minView: 2,
+                value: date
+            });
+
+            $('#CreationDate').datetimepicker({
+                weekStart: 1,
+                todayBtn: 1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                forceParse: 0,
+                showMeridian: 1,
+                minView: 2,
+                value: date
+            });
+        });
+    </script>
+
+    @*--SCRIPT FOR ADDING ROWS IN ITEMS LIST--*@
+    <script>
+        $(document).ready(function () {
+            //FOR THE HEADER
+            add1stRow();
+
+            $("input#addproduct").on('click', function () {
+                var salesOrderLineRowCOunt = $("table#salesorderlinetable tr").length;
+
+                var salesOrderID = 0;
+
+                var rowCount = parseInt($('table#salesorderlinetable tr[name="rowForSOLine"]').length) + 1;
+
+                var listcount = parseInt(rowCount) - 1;
+
+
+                var data = "<tr id='rowForSOLine" + rowCount + "' name='rowForSOLine'>";
+                // CHECK BOX TO SELECT A LINE ITEM
+                data += "<td id='selectedRow'><input type='checkbox' class='selectedRow" + rowCount + "' name='selectedRow' style='padding:1px;'/></td>";
+                // LINE ID
+                data += "<td><input type='text' id='lineID" + rowCount + "' name='salesorderlinetable[" + listcount + "].salesorderlineID' " +
+                    "style='background-color:#FFFEDD; width:100%; text-align:center;' disabled></td > ";
+                // HIDDEN UNIQUE ID
+                data += "<td hidden><input type='text' id='unique_ID" + rowCount + "' name='salesorderlinetable[" + listcount + "].unique_ID' style='text-align: center;'></td>";
+                // EXTERNAL LINE REFERENCE
+                //data += "<td style='white- space:nowrap;' id='ExternalLineRefTD'>" +
+                //    "<input type='text' id='ExternalLineRef" + rowCount + "' name='salesorderlinetable[" + listcount + "].productDesc' style='width:100%;'/></td>";
+                // PRODUCT ID
+                data += "<td style='white- space:nowrap;'>" +
+                    "<input type='text' id='ProductID" + rowCount + "' name='salesorderlinetable[" + listcount + "].productID' oninput='getProdDetailsViaID(" + (getTableRow() + 1) + ")' list='productidlist' style='width:100%;'/>" +
+                    "<datalist id='productidlist'></datalist>" +
+                    "<input type='text' hidden id='selectedProductID" + rowCount + "' name='selectedProductID'/></td>";
+                // PRODUCT DESCRIPTION
+                data += "<td style='white- space:nowrap;' id='ProdDescTD'>" +
+                    "<input type='text' id='ProductDesc" + rowCount + "' name='salesorderlinetable[" + listcount + "].productDesc' oninput='getProdDetails(" + (getTableRow() + 1) + ")' list='productdesclist' style='width:100%;'/>" +
+                    "<datalist id='productdesclist'></datalist>" +
+                    "<input type='text' hidden id='selectedProductDesc" + rowCount + "' name='selectedProductDesc'/></td>";
+                // UOM
+                data += "<td id='uomTD'><input type='text' id='uom" + rowCount + "' name='salesorderlinetable[" + listcount + "].uom' list='uomlist'" +
+                    "oninput='getUoMPrice(" + (getTableRow() + 1) + ")' style='width:100%; text-align:center;' disabled>" +
+                    "<datalist id='uomlist'></datalist></td>";
+                // QUANTITY
+                data += "<td id='QuantityTD'><input type='number' id='quantity" + rowCount + "' name='salesorderlinetable[" + listcount + "].quantity' oninput='netPrice_quantity(" + rowCount + ")' " +
+                    "style='width:100%; text-align:center;' disabled></td>";
+                // FREE GOODS
+                data += "<td><input type='number' id='freeGood" + rowCount + "' name='salesorderlinetable[" + listcount + "].freeGood' " +
+                    "style='width:100%; text-align:center;' disabled></td>";
+                // UNIT PRICE
+                data += "<td><input type='text' id='unitPriceDisplay" + rowCount + "' " +
+                    "style='background-color:#FFFEDD; width:100%; text-align:center;' read-only> " +
+                    "<input type='text' step='any' hidden id='unitPrice" + rowCount + "' name='salesorderlinetable[" + listcount + "].unitPrice'/></td>";
+                // GROSS AMOUNT
+                data += "<td id='netpriceTD'>" +
+                    "<input type='number' class='netPrice' id='salesorderlineAmountDisplay" + rowCount + "'" +
+                    "style='background-color:#FFFEDD; width:100%; text-align:center;' readonly>" +
+                    "<input type='number' step='any' hidden id='salesorderlineAmount" + rowCount + "' name='salesorderlinetable[" + listcount + "].salesorderlineAmount'/></td>";
+                // DISCOUNT AMOUNT
+                data += "<td id='DiscountTD'>" +
+                    "<input type='text' step='any' id='discountDisplay" + rowCount + "'" +
+                    "style='width:100%; text-align:center;' disabled>" +
+                    "<input type='number' step='any' id='discount" + rowCount + "' name='discountAmnt" + listcount + "' " +
+                    "style='width:100%; text-align:center;' hidden>" +
+                    "<input type='number' step='any' hidden id='1discount" + rowCount + "' name='salesorderlinetable[" + listcount + "].discount1'/>" +
+                    "<input type='number' step='any' hidden id='2discount" + rowCount + "' name='salesorderlinetable[" + listcount + "].discount2'/></td>";
+                // NET AMOUNT
+                data += "<td id='netamountTD'>" +
+                    "<input type='number' class='netAmount' id='netAmountDisplay" + rowCount + "'" +
+                    "style='background-color:#FFFEDD; width:100%; text-align:center;' readonly>" +
+                    "<input type='number' step='any' hidden id='netAmount" + rowCount + "' name='salesorderlinetable[" + listcount + "].netAmount'/></td>";
+
+                data += "</tr>";
+                $('#salesorderlinetable').append(data);
+                //event.preventDefault();
+                //}
+            });
+        })
+
+        function add1stRow() {
+            var rowCount = getTableRow();
+            //var rowCountLast = getTableRow() + 1;
+            if (rowCount < 1) {
+                var salesOrderLineRowCOunt = $("table#salesorderlinetable tr").length;
+
+                var salesOrderID = 0;
+
+                //for (i = 0; i < salesOrderLineRowCOunt; i++) {
+
+                var rowCount = parseInt($('table#salesorderlinetable tr[name="rowForSOLine"]').length) + 1;
+
+                var listcount = parseInt(rowCount) - 1;
+
+                //alert("salesOrderLineRowCOunt:" + salesOrderLineRowCOunt + "::::rowCount" + rowCount + "::::listcount" + listcount);
+
+                var data = "<tr id='rowForSOLine" + rowCount + "' name='rowForSOLine'>";
+                // CHECK BOX TO SELECT A LINE ITEM
+                data += "<td id='selectedRow'><input type='checkbox' class='selectedRow" + rowCount + "' name='selectedRow' style='padding:1px;'/></td>";
+                // LINE ID
+                data += "<td><input type='text' id='lineID" + rowCount + "' name='salesorderlinetable[" + listcount + "].salesorderlineID' " +
+                    "style='background-color:#FFFEDD; width:100%; text-align:center;' disabled></td > ";
+                // HIDDEN UNIQUE ID
+                data += "<td hidden><input type='text' id='unique_ID" + rowCount + "' name='salesorderlinetable[" + listcount + "].unique_ID' style='text-align: center;'></td>";
+                // EXTERNAL LINE REFERENCE
+                //data += "<td style='white- space:nowrap;' id='ExternalLineRefTD'>" +
+                //    "<input type='text' id='ExternalLineRef" + rowCount + "' name='salesorderlinetable[" + listcount + "].productDesc' style='width:100%;'/></td>";
+                // PRODUCT ID
+                data += "<td style='white- space:nowrap;'>" +
+                    "<input type='text' id='ProductID" + rowCount + "' name='salesorderlinetable[" + listcount + "].productID' oninput='getProdDetailsViaID(" + (getTableRow() + 1) + ")' list='productidlist' style='width:100%;'/>" +
+                    "<datalist id='productidlist'></datalist>" +
+                    "<input type='text' hidden id='selectedProductID' name='selectedProductID'/></td>";
+                // PRODUCT DESCRIPTION
+                data += "<td style='white- space:nowrap;' id='ProdDescTD'>" +
+                    "<input type='text' id='ProductDesc" + rowCount + "' name='salesorderlinetable[" + listcount + "].productDesc' oninput='getProdDetails(" + (getTableRow() + 1) + ")' list='productdesclist' style='width:100%;'/>" +
+                    "<datalist id='productdesclist'></datalist>" +
+                    "<input type='text' hidden id='selectedProductDesc" + rowCount + "' name='selectedProductDesc'/></td>";
+                // UOM
+                data += "<td id='uomTD'><input type='text' id='uom" + rowCount + "' name='salesorderlinetable[" + listcount + "].uom' list='uomlist'" +
+                    "oninput='getUoMPrice(" + (getTableRow() + 1) + ")' style='width:100%; text-align:center;' disabled>" +
+                    "<datalist id='uomlist'></datalist></td>";
+                // QUANTITY
+                data += "<td id='QuantityTD'><input type='number' id='quantity" + rowCount + "' name='salesorderlinetable[" + listcount + "].quantity' oninput='netPrice_quantity(" + rowCount + ")' " +
+                    "style='width:100%; text-align:center;' disabled></td>";
+                // FREE GOODS
+                data += "<td><input type='number' id='freeGood" + rowCount + "' name='salesorderlinetable[" + listcount + "].freeGood' " +
+                    "style='width:100%; text-align:center;' disabled></td>";
+                // UNIT PRICE
+                data += "<td><input type='text' id='unitPriceDisplay" + rowCount + "' " +
+                    "style='background-color:#FFFEDD; width:100%; text-align:center;' read-only> " +
+                    "<input type='text' step='any' hidden id='unitPrice" + rowCount + "' name='salesorderlinetable[" + listcount + "].unitPrice'/></td>";
+                // GROSS AMOUNT
+                data += "<td id='netpriceTD'>" +
+                    "<input type='text' class='netPrice' id='salesorderlineAmountDisplay" + rowCount + "'" +
+                    "style='background-color:#FFFEDD; width:100%; text-align:center;' readonly>" +
+                    "<input type='number' step='any' hidden id='salesorderlineAmount" + rowCount + "' name='salesorderlinetable[" + listcount + "].salesorderlineAmount'/></td>";
+                // DISCOUNT AMOUNT
+                data += "<td id='DiscountTD'>" +
+                    "<input type='text' step='any' id='discountDisplay" + rowCount + "'" +
+                    "style='width:100%; text-align:center;' disabled>" +
+                    "<input type='number' step='any' id='discount" + rowCount + "' name='discountAmnt" + listcount + "' " +
+                    "style='width:100%; text-align:center;' hidden>" +
+                    "<input type='number' step='any' hidden id='1discount" + rowCount + "' name='salesorderlinetable[" + listcount + "].discount1'/>" +
+                    "<input type='number' step='any' hidden id='2discount" + rowCount + "' name='salesorderlinetable[" + listcount + "].discount2'/></td>";
+                // NET AMOUNT
+                data += "<td id='netamountTD'>" +
+                    "<input type='text' class='netAmount' id='netAmountDisplay" + rowCount + "'" +
+                    "style='background-color:#FFFEDD; width:100%; text-align:center;' readonly>" +
+                    "<input type='number' step='any' hidden id='netAmount" + rowCount + "' name='salesorderlinetable[" + listcount + "].netAmount'/></td>";
+
+                data += "</tr>";
+                $('#salesorderlinetable').append(data);
+                //event.preventDefault();
+            }
+        }
+
+    </script>
+
+    @*--SCRIPT FOR COMPUTATIONS--*@
+    <script>
+        function getTableRow() {
+            var trCount = $('#mytbody').children('tr').length;
+
+            return trCount;
+        }
+
+        function netPrice_quantity(rowID) {
+            var trCount = rowID;
+
+            var unitPrice = $("input#unitPrice" + trCount).val();
+            var quantity = $("input#quantity" + trCount).val();
+            var total = (unitPrice * quantity).toFixed(2);
+
+            // -- UPDATED BY EUGENE SANTOS 20180220: CURRENCY FORMAT
+            $('input#salesorderlineAmount' + trCount).val(total);
+            $('input#netAmount' + trCount).val(total);
+            $('input#salesorderlineAmountDisplay' + trCount).val(numeral(total).format('0,0.00'));
+            $('input#netAmountDisplay' + trCount).val(numeral(total).format('0,0.00'));
+
+            var prodID = $("input#ProductID" + trCount).val();
+            getDiscount(prodID, total, trCount);
+        }
+
+        function ttlGrossAmount() {
+            var trCount = getTableRow();
+            var ttlNet = 0;
+
+            //alert('Success!');
+
+            for (var i = 0; i < trCount; i++) {
+                ttlNet += parseFloat($('input#netAmount' + (i + 1)).val());
+            }
+
+            // -- UPDATED BY EUGENE SANTOS 20180220: CURRENCY FORMAT
+            $('input#totalNet').val(ttlNet.toFixed(2));
+            $('input#totalNetDisplay').val(numeral(ttlNet).format('0,0.00'));
+
+            ttlNetAmount();
+        }
+
+        function ttlDiscount1() {
+            var trCount = getTableRow();
+            var ttlDisc1 = 0;
+
+            for (var i = 0; i < trCount; i++) {
+                ttlDisc1 += parseFloat($('input#1discount' + + (i + 1)).val());
+            }
+
+            // -- UPDATED BY EUGENE SANTOS 20180220: CURRENCY FORMAT
+            $('input#disc1amnt').val(ttlDisc1.toFixed(2));
+            $('input#disc1amntDisplay').val(numeral(ttlDisc1).format('0,0.00'));
+            ttlNetAmount();
+        }
+
+        function ttlDiscount2() {
+            var trCount = getTableRow();
+            var ttlDisc2 = 0;
+
+            for (var i = 0; i < trCount; i++) {
+                ttlDisc2 += parseFloat($('input#2discount' + + (i + 1)).val());
+            }
+
+            // -- UPDATED BY EUGENE SANTOS 20180220: CURRENCY FORMAT
+            $('input#disc2amnt').val(ttlDisc2.toFixed(2));
+            $('input#disc2amntDisplay').val(numeral(ttlDisc2).format('0,0.00'));
+            ttlNetAmount();
+        }
+
+        function ttlNetAmount() {
+            var ttlGross = $('input#totalNet').val();
+            var ttlDisc1 = $('input#disc1amnt').val();
+            var ttlDisc2 = $('input#disc2amnt').val();
+            var ttlNet = 0;
+
+            if ((ttlDisc1 == null || ttlDisc1.trim() == "" || ttlDisc1.length < 1) &&
+                (ttlDisc2 == null || ttlDisc2.trim() == "" || ttlDisc2.length < 1)) {
+
+                var ttlNet = parseFloat(ttlGross);
+
+                // -- UPDATED BY EUGENE SANTOS 20180220: CURRENCY FORMAT
+                $('input#totalOverall').val(ttlNet);
+                $('input#totalOverallDisplay').val(numeral(ttlNet).format('0,0.00'));
+                //alert('Success1! ttlOverall: ' + ttlNet);
+
+            } else if (ttlDisc2 == null || ttlDisc2.trim() == "" || ttlDisc2.length < 1) {
+
+                var ttlNet = parseFloat(ttlGross) - parseFloat(ttlDisc1);
+
+                // -- UPDATED BY EUGENE SANTOS 20180220: CURRENCY FORMAT
+                $('input#totalOverall').val(ttlNet);
+                $('input#totalOverallDisplay').val(numeral(ttlNet).format('0,0.00'));
+                //alert('Success2! ttlOverall: ' + ttlNet);
+
+            } else {
+
+                var ttlNet = parseFloat(ttlGross) - parseFloat(ttlDisc1) - parseFloat(ttlDisc2);
+
+                // -- UPDATED BY EUGENE SANTOS 20180220: CURRENCY FORMAT
+                $('input#totalOverall').val(ttlNet);
+                $('input#totalOverallDisplay').val(numeral(ttlNet).format('0,0.00'));
+                //alert('Success3! ttlOverall: ' + ttlNet);
+            }
+
+
+        }
+    </script>
+
+    @*--SCRIPT FOR DISCOUNT LIST--*@
+    <script>
+        function getDiscount(prodID, grossAmnt, trCount) {
+            var accountID = $("#selectedAccount").val();
+            var cgroupcode = $("#cgroupcode").val();
+            var productID = prodID;
+            //alert('Success w/ AccountID: ' + accountID);
+            var DiscountList = {};
+            DiscountList.url = "/SalesOrder/GetDiscountList";
+            DiscountList.type = "POST";
+            DiscountList.data = JSON.stringify({ accountid: accountID, productid: productID, cgroupcode: cgroupcode });
+            DiscountList.datatype = "json";
+            DiscountList.contentType = "application/json";
+            DiscountList.success = function (DiscountList) {
+                var ttlLineDiscount = 0;
+                $.each(DiscountList, function (index, optiondata) {
+                    var listcount = DiscountList.length;
+                    var disc = 0;
+                    var total = grossAmnt;
+                    ///alert('Success! AccountID: ' + optiondata.AccountID + ", ProductID: " + optiondata.ProductID + ", listCount: " + listcount + " = " + optiondata.PercentageValue);
+                    if (accountID == optiondata.AccountID && productID == optiondata.ProductID && (optiondata.CustomerGroupCode == null || optiondata.CustomerGroupCode.trim() == "")) {
+                        if (listcount > 1) {
+                            var disc1;
+                            var disc2;
+                            //alert('Success1!');
+
+                            if (optiondata.DiscountLevel == 1) {
+                                var discountAmnt = parseFloat(total) * parseFloat(optiondata.PercentageValue);
+                                $('input#1discount' + trCount).val(discountAmnt.toFixed(5));
+
+                                disc1 = discountAmnt.toFixed(2);
+                                ttlLineDiscount += parseFloat(disc1);
+
+                                // -- UPDATED BY EUGENE SANTOS 20180220: CURRENCY FORMAT
+                                $('input#discount' + trCount).val(ttlLineDiscount);
+                                $('input#discountDisplay' + trCount).val(numeral(ttlLineDiscount).format('0,0.00'));
+                                //alert('Success2!');
+
+                            } else if (optiondata.DiscountLevel == 2) {
+                                var discountAmnt = parseFloat(total) * parseFloat(optiondata.PercentageValue);
+                                $('input#2discount' + trCount).val(discountAmnt.toFixed(5));
+
+                                disc2 = discountAmnt.toFixed(2);
+                                ttlLineDiscount += parseFloat(disc2);
+
+                                // -- UPDATED BY EUGENE SANTOS 20180220: CURRENCY FORMAT
+                                $('input#discount' + trCount).val(ttlLineDiscount);
+                                $('input#discountDisplay' + trCount).val(numeral(ttlLineDiscount).format('0,0.00'));
+                                //alert('Success3!');
+                            }
+                        } else {
+                            var discountAmnt = parseFloat(total) * parseFloat(optiondata.PercentageValue);
+                            $('input#1discount' + trCount).val(discountAmnt.toFixed(5));
+
+                            disc += parseFloat(discountAmnt.toFixed(2));
+                            ttlLineDiscount += parseFloat(disc);
+
+                            // -- UPDATED BY EUGENE SANTOS 20180220: CURRENCY FORMAT
+                            $('input#discount' + trCount).val(ttlLineDiscount);
+                            $('input#discountDisplay' + trCount).val(numeral(ttlLineDiscount).format('0,0.00'));
+                            //alert('Success4!');
+                        }
+                    } else if (accountID == optiondata.AccountID && ((optiondata.ProductID == null || optiondata.ProductID == "") || (optiondata.CustomerGroupCode == null || optiondata.CustomerGroupCode == ""))) {
+                        var discountAmnt = parseFloat(total) * parseFloat(optiondata.PercentageValue);
+                        $('input#1discount' + trCount).val(discountAmnt.toFixed(5));
+
+                        disc += parseFloat(discountAmnt.toFixed(2));
+                        ttlLineDiscount += parseFloat(disc);
+
+                        // -- UPDATED BY EUGENE SANTOS 20180220: CURRENCY FORMAT
+                        $('input#discount' + trCount).val(ttlLineDiscount);
+                        $('input#discountDisplay' + trCount).val(numeral(ttlLineDiscount).format('0,0.00'));
+                        //alert('Success5!');
+                    } else if (cgroupcode == optiondata.CustomerGroupCode && ((optiondata.ProductID == null || optiondata.ProductID == "") || (optiondata.AccountID == null || optiondata.AccountID == ""))) {
+                        var discountAmnt = parseFloat(total) * parseFloat(optiondata.PercentageValue);
+                        $('input#1discount' + trCount).val(discountAmnt.toFixed(5));
+
+                        disc += parseFloat(discountAmnt.toFixed(2));
+                        ttlLineDiscount += parseFloat(disc);
+
+                        // -- UPDATED BY EUGENE SANTOS 20180220: CURRENCY FORMAT
+                        $('input#discount' + trCount).val(ttlLineDiscount);
+                        $('input#discountDisplay' + trCount).val(numeral(ttlLineDiscount).format('0,0.00'));
+                        //alert('Success6!');
+                    } else {
+                        //alert('Failed!');
+                    }
+                });
+                ttlGrossAmount();
+                ttlDiscount1();
+                ttlDiscount2();
+            };
+            DiscountList.error = function () { alert("Cannot Retrieve Products..."); };
+            $.ajax(DiscountList);
+        }
+    </script>
+
+    @*==============================================*@
+    @*---------UPDATE SCRIPTS START HERE------------*@
+    @*--SCRIPT FOR UPDATING SALES ORDER INFORMATION*@
+    <script type="text/javascript">
+        function updateSalesOrder(salesOrderID, rowCount) {
+            $("#personlist").empty();
+            $("#updateproductdesclist").empty();
+            $("#updateproductidlist").empty();
+            $("#updateaddresslist").empty();
+            $("#updatetermslist").empty();
+            $("#updatepersonlist").empty();
+
+            $("#updateSalesOrderID").val("")
+            $("#updateSalesOrderCreationDate").val("")
+            $('#updateTransactionStatus option:selected').prop("selected", false);
+            $("#updateSalesOrderStatus").val("") //CHECK VALUE
+            $("#updateAccountName").val("")
+            $("#updateAccountID").val("");
+            $("#updatePaymentTerms").val("") //GET PAYMENT DESC
+            $("#updateSelectedTerm").val("");
+            $("#updateRequestedDate").val("")
+            $("#updateShipToAddress").val("")
+            $("#updateSelectedAddress").val("")
+            $("#updateSupplier").val("")
+            $("#updateSupplierID").val("")
+            $("#updateComments").val("")
+            $("#updateExternalReference").val("")
+            $("#updateDescription").val("") //GET DESC
+
+            $('#updateItemsTable tbody').empty();
+
+
+            var creationDate = $("#salesOrderCreationDate" + rowCount).text()
+            var returned_value, ticks_string, ticks_number, date;
+            var returned_value1, ticks_string1, ticks_number1, date1;
+
+            //THIS IS TO SET DETAILS FOR THE SALES ORDER HEADER
+            var SalesOrderHeaderDetails = {};
+            SalesOrderHeaderDetails.url = "/SalesOrder/GetFilteredAccount";
+            SalesOrderHeaderDetails.type = "POST";
+            SalesOrderHeaderDetails.data = JSON.stringify({ salesOrderID: salesOrderID });
+            SalesOrderHeaderDetails.datatype = "json";
+            SalesOrderHeaderDetails.contentType = "application/json";
+            SalesOrderHeaderDetails.success = function (AccountDetails) {
+                $.each(AccountDetails, function (index, optiondata) {
+
+                    returned_value = optiondata.RequestedDate;
+                    ticks_string = returned_value.substring(6);
+                    ticks_number = parseInt(ticks_string);
+                    date = new Date(ticks_number);
+
+                    returned_value1 = optiondata.SalesOrderCreationDate;
+                    ticks_string1 = returned_value1.substring(6);
+                    ticks_number1 = parseInt(ticks_string1);
+                    date1 = new Date(ticks_number1);
+
+                    $("#updateSalesOrderID").val(optiondata.SalesOrderID)
+                    $("#updateSalesOrderCreationDate").val(date1.toLocaleDateString())
+                    //20180221.JT.S
+                    //$("#updateTransactionStatus > [value=" + optiondata.TransactionStatus + "]").attr("selected", "true");
+                    $("#updateTransactionStatus > [value=" + optiondata.TransactionStatusID + "]").attr("selected", "true");
+                    //20180221.JT.E
+                    $("#updateSalesOrderStatus").val(optiondata.OrderStatus) //CHECK VALUE
+                    $("#updateAccountName").val(optiondata.AccountName)
+                    $("#updateAccountID").val(optiondata.AccountID)
+                    $("#updateSelectedPerson").val(optiondata.AccountContactID) //GET CONTACT NAME
+                    $("#updateSelectedTerm").val(optiondata.PaymentTermsID)
+                    $("#updateRequestedDate").val(date.toLocaleDateString())
+                    $("#updateSelectedAddress").val(optiondata.ShippingAddress)
+                    $("#updateSupplier").val(optiondata.SupplierName)
+                    $("#updateSupplierID").val(optiondata.SupplierID)
+                    $("#updateComments").val(optiondata.Comments)
+                    $("#updateExternalReference").val(optiondata.ExternalReference)
+                    $("#updateDescription").val(optiondata.Description) //GET DESC
+                });
+
+                //THIS IS TO GET THE CONTACT PERSON/S FOR THE DEFAULT ACCOUNT
+                var UAccountContact = {};
+                UAccountContact.url = "/SalesOrder/GetAccountContacts2";
+                UAccountContact.type = "POST";
+                UAccountContact.data = JSON.stringify({ account: $("#updateAccountID").val() });
+                UAccountContact.datatype = "json";
+                UAccountContact.contentType = "application/json";
+                UAccountContact.success = function (itemaccountcontact) {
+                    $.each(itemaccountcontact, function (index, optiondata) {
+                        if ($("#updateSelectedPerson").val() == optiondata.Value) {
+                            $("#updatepersonlist").append("<option selected value='" + optiondata.Text + "' data-value='" + optiondata.Value + "'></option>");
+                        }
+                        else
+                            $("#updatepersonlist").append("<option value='" + optiondata.Text + "' data-value='" + optiondata.Value + "'></option>");
+
+                    });
+
+                    $("#updatepersonlist").prop("disabled", false);
+                };
+                UAccountContact.error = function () { alert("Cannot Retrieve Contact Persons..."); };
+                $.ajax(UAccountContact);
+
+                //THIS IS TO GET THE SHIPPING ADDRESS/ES FOR THE DEFAULT ACCOUNT
+                var UShippingAddress = {};
+                UShippingAddress.url = "/SalesOrder/GetShippingAddress2";
+                UShippingAddress.type = "POST";
+                UShippingAddress.data = JSON.stringify({ account: $("#updateAccountID").val() });
+                UShippingAddress.datatype = "json";
+                UShippingAddress.contentType = "application/json";
+                UShippingAddress.success = function (itemshippingaddress) {
+                    $.each(itemshippingaddress, function (index, optiondata) {
+                        if ($("#updateSelectedAddress").val() == optiondata.Value) {
+                            $("#updateShipToAddress").val(optiondata.Text);
+                            $("#updateaddresslist").append("<option selected value='" + optiondata.Text + "' data-value='" + optiondata.Value + "'></option>");
+                        }
+                        else {
+                            $("#updateaddresslist").append("<option value='" + optiondata.Text + "' data-value='" + optiondata.Value + "'></option>");
+                        }
+
+                    });
+
+                    $("#updateaddresslist").prop("disabled", false);
+                };
+                UShippingAddress.error = function () { alert("Cannot Retrieve Contact Persons..."); };
+                $.ajax(UShippingAddress);
+
+                var uPaymentTerms = {};
+                uPaymentTerms.url = "/SalesOrder/GetPaymentTerms";
+                uPaymentTerms.type = "POST";
+                uPaymentTerms.data = JSON.stringify({});
+                uPaymentTerms.datatype = "json";
+                uPaymentTerms.contentType = "application/json";
+                uPaymentTerms.success = function (TermsList) {
+                    $.each(TermsList, function (index, optiondata) {
+                        if ($("#updateSelectedTerm").val() == optiondata.Value) {
+                            $("#updatePaymentTerms").val(optiondata.Text)
+                            $("#updatetermslist").append("<option selected value='" + optiondata.Text + "' data-value='" + optiondata.Value + "'></option>");
+                        }
+                        else
+                            $("#updatetermslist").append("<option value='" + optiondata.Text + "' data-value='" + optiondata.Value + "'></option>");
+                    });
+
+                    $("#termslist").prop("disabled", false);
+                };
+                uPaymentTerms.error = function () { alert("Cannot Retrieve Payment Terms"); };
+                $.ajax(uPaymentTerms);
+            };
+            SalesOrderHeaderDetails.error = function () { alert("Cannot Retrieve Account Details"); };
+            $.ajax(SalesOrderHeaderDetails);
+
+            var SalesOrderLines = {};
+            SalesOrderLines.url = "/SalesOrder/GetSalesOrderLines";
+            SalesOrderLines.type = "POST";
+            SalesOrderLines.data = JSON.stringify({ salesOrderID: salesOrderID });
+            SalesOrderLines.datatype = "json";
+            SalesOrderLines.contentType = "application/json";
+            SalesOrderLines.success = function (SalesOrderLinesData) {
+                var counter = 0;
+                var incrementedCounter = 1;
+                var totalDiscount1 = 0;
+                var totalDiscount2 = 0;
+                var totalGrossAmt = 0;
+                var totalNetAmt = 0;
+                var netAmount = 0;
+
+                $.each(SalesOrderLinesData, function (index, optiondata) {
+                    var data = '';
+                    var discount = 0;
+                    if (optiondata.Discount === "null" || optiondata.Discount === "")
+                        discount = 0;
+                    else {
+
+                        totalDiscount1 = totalDiscount1 + optiondata.Discount1Amount;
+                        totalDiscount2 = totalDiscount2 + optiondata.Discount2Amount;
+                        discount = parseFloat(optiondata.Discount1Amount) + parseFloat(optiondata.Discount2Amount);
+
+                        totalGrossAmt += optiondata.GrossAmount;
+                        totalNetAmt = totalGrossAmt - (totalDiscount1 - totalDiscount2);
+
+                        $("#disc1amntVal").val(numeral(totalDiscount1).format('0,0.00'));
+                        $("#disc2amntVal").val(numeral(totalDiscount2).format('0,0.00'));
+                        $("#totalOverallVal").val(numeral(totalNetAmt).format('0,0.00'));
+
+                    }
+                    var freegoods = 0;
+                    if (optiondata.FreeGood === "null" || optiondata.FreeGood === "" || optiondata.FreeGood === null)
+                        freegoods = 0;
+                    else
+                        freegoods = optiondata.FreeGood;
+
+
+                    data += "<tr id='rowID" + incrementedCounter + "' class='rowClassID" + incrementedCounter + "'>"
+
+                    data += "<td hidden id='data" + incrementedCounter + "'>" + incrementedCounter + "</td>"
+
+                    //CHECKBOX WITH SALES ORDER ID VALUE
+                    data += "<td><input type='checkbox' id='updateCheckboxSalesOrderLine" + incrementedCounter + "' class='checkboxid' value=" + optiondata.SalesOrderLineID + " onclick='clickedCheckbox(" + incrementedCounter + ")' /></td>";
+
+                    //SALES ORDER LINE ID
+                    data += "<td><input type='text' id='lineID" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].salesorderlineID' value='" + optiondata.SalesOrderLineID + "' " +
+                        "style='background-color:#FFFEDD; width:100%; text-align:center;' readonly></td > ";
+
+                    //PRODUCT ID
+                    data += "<td style='white- space:nowrap;'>" +
+                        "<input type='text' oninput='updateProdID(" + incrementedCounter + ")' id='updateProductID" + incrementedCounter + "' value='" + optiondata.ProductID + "'  list='updateproductidlist" + incrementedCounter + "' style='width:100%;' disabled/>" +
+                        "<datalist id='updateproductidlist" + incrementedCounter + "'></datalist>" +
+                        "<input type='text' hidden id='updateSelectedProductID" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].productID' value='" + optiondata.ProductID + "'/></td>";
+
+
+                    //PRODUCT DESCRIPTION
+                    data += "<td style='white- space:nowrap;' id='ProdDescTD'>" +
+                        "<input type='text' oninput='updateProdDesc(" + incrementedCounter + ")' id='updateProductDesc" + incrementedCounter + "' value='" + optiondata.ProductDesc + "' list='updateproductdesclist" + incrementedCounter + "' style='width:100%;' disabled/>" +
+                        "<datalist id='updateproductdesclist" + incrementedCounter + "'></datalist>" +
+                        "<input type='text' hidden id='updateSelectedProductDesc" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].productDesc' value='" + optiondata.ProductDesc + "'/></td>";
+
+                    //UNIT OF MEASUREMENT
+                    data += "<td><input type='text' id='updateUOM" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].uom' value='" + optiondata.UoM + "' " +
+                        "style='width:100%; text-align:center;' readonly required></td>";
+
+
+                    //QUANTITY
+                    data += "<td id='QuantityTD'><input type='text' id='updateQuantity" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].quantity' value='" + optiondata.Quantity + "' " +
+                        "style='width:100%; text-align:center;' oninput='updateQuantity(" + incrementedCounter + ")' readonly></td>";
+
+                    //FREE GOODS
+                    data += "<td><input type='text' id='updateFreeGood" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].freeGood' value='" + freegoods + "' " +
+                        "style='width:100%; text-align:center;' readonly></td>";
+
+                    //UNIT PRICE
+                    data += "<td><input type='text' id='updateUnitPrice" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].unitPrice' value='" + optiondata.UnitPrice.toFixed(2) + "' " +
+                        "style='background-color:#FFFEDD; width:100%; text-align:center;' readonly ></td>";
+
+                    //SALES ORDER LINE AMOUNT
+                    data += "<td><input type='text' id='updateSalesorderlineAmount" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].salesorderlineAmount' value='" + optiondata.GrossAmount.toFixed(2) + "' " +
+                        "style='background-color:#FFFEDD; width:100%; text-align:center;' readonly></td>";
+
+                    //DISCOUNT AMOUNT
+                    data += "<td id='DiscountTD'><input type='text' id='updateDiscount" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].discount' value='" + discount.toFixed(2) + "' " +
+                        "style='width:100%; text-align:center;' oninput='updateDiscount(" + incrementedCounter + ")' readonly>" +
+                        "<input type='number' hidden id='1discount" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].discount1' value='" + optiondata.Discount1Amount.toFixed(2) + "'/>" +
+                        "<input type='number' hidden id='2discount" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].discount2' value='" + optiondata.Discount2Amount.toFixed(2) + "'/></td>";
+
+                    // NET AMOUNT
+                    data += "<td id='netamountTD'>" +
+                        "<input type='number' class='netAmount' id='netAmount" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].netAmount' value='" + optiondata.SalesOrderLineAmount + "'  " +
+                        "style='background-color:#FFFEDD; width:100%; text-align:center;' readonly></td>";
+
+
+                    //STATUS
+                    data += "<td><input type='text' id='updateStatus" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].status' value='" + optiondata.TransactionStatus + "' " +
+                        "style='width:100%; text-align:center;' hidden></td>";
+
+                    data += "</tr>"
+                    $('#updateItemsTable').append(data);
+
+                    incrementedCounter++; counter++;
+                });
+                calculateTotalGrossValue();
+            };
+            SalesOrderLines.error = function () { alert("Cannot Retrieve Product Details"); };
+            $.ajax(SalesOrderLines);
+        }
+    </script>
+
+    @*--SCRIPT WHEN EDIT BUTTON ABOVE ORDER LINES HAS BEEN CLICKED*@
+    <script>
+        function editOrderLine() {
+            //get updateItemsTable row count
+            var rowCount = $("#updateItemsTable tbody tr").length;
+            var checkedCount = 0;
+            var checkedRowID = 0;
+            //check if checkbox has been checked
+            for (var counter = 1; counter <= rowCount; counter++) {
+                if ($("#updateCheckboxSalesOrderLine" + counter).is(":checked")) {
+                    checkedCount++; checkedRowID = counter;
+                }
+            }
+
+            //if checked == 1, make fields editable, add check and x button on the side
+            if (checkedCount == 1) {
+                $("#updateStatus" + checkedRowID).val("UPDATED");
+
+                var productID = $("#updateProductID" + checkedRowID).val();
+                var productDesc = $("#updateProductDesc" + checkedRowID).val();
+                var quantity = $("#updateQuantity" + checkedRowID).val()
+                var quantityDisabled = (productID != null || productID != "") && (productDesc != null || productDesc != "") ? false : true;
+                var discountDisabled = (quantity != null || quantity != "") ? false : true;
+
+                //SET FIELDS EDITABLE
+                $("#updateProductID" + checkedRowID).prop("disabled", false);
+                $("#updateProductDesc" + checkedRowID).prop("disabled", false);
+                $("#updateQuantity" + checkedRowID).prop("readonly", quantityDisabled);
+
+                $("#updateDiscount" + checkedRowID).prop("readonly", true);
+                $("#updateFreeGood" + checkedRowID).prop("readonly", false);
+                //THIS IS TO GET THE PRODUCTS FOR THE DEFAULT SUPPLIER
+
+                var UProducts = {};
+                UProducts.url = "/SalesOrder/GetProducts";
+                UProducts.type = "POST";
+                UProducts.data = JSON.stringify({ supplier: $("#updateSupplierID").val() });
+                UProducts.datatype = "json";
+                UProducts.contentType = "application/json";
+                UProducts.success = function (itemproducts) {
+                    //alert("SUCCESS! = #selectedSupplier");
+                    $.each(itemproducts, function (index, optiondata) {
+                        $("#updateproductdesclist" + checkedRowID).append("<option data-value='" + optiondata.Value + "' value='" + optiondata.Text + "'></option>");
+                    });
+
+                    $("#updateproductdesclist" + checkedRowID).prop("disabled", false);
+                };
+                UProducts.error = function () { alert("Cannot Retrieve Products Description..."); };
+                $.ajax(UProducts);
+
+                //THIS IS TO GET THE PRODUCT IDS FOR THE DEFAULT SUPPLIER
+                var uProductsID = {};
+                uProductsID.url = "/SalesOrder/GetProductsID";
+                uProductsID.type = "POST";
+                uProductsID.data = JSON.stringify({ supplier: $("#updateSupplierID").val() });
+                uProductsID.datatype = "json";
+                uProductsID.contentType = "application/json";
+                uProductsID.success = function (itemproductsid) {
+                    $.each(itemproductsid, function (index, optiondata) {
+                        $("#updateproductidlist" + checkedRowID).append("<option data-value='" + optiondata.Value + "' value='" + optiondata.Text + "'></option>");
+                    });
+
+                    $("#updateproductidlist" + checkedRowID).prop("disabled", false);
+                };
+                uProductsID.error = function () { alert("Cannot Retrieve Products ID..."); };
+                $.ajax(uProductsID);
+            }
+            else {
+                alert("Please select one row only.")
+            }
+
+            //else, inform user to select only one checkbox
+        }
+    </script>
+
+    @*--SCRIPT WHEN ADD BUTTON ABOVE ORDER LINES HAS BEEN CLICKED*@
+    <script>
+        function addOrderLine() {
+            var rowCount = $("#updateItemsTable tbody tr").length;
+            var pastLineID = $("#lineID" + rowCount).val();
+            var nextLineID = parseInt(pastLineID) + 1;
+            var incrementedCounter = parseInt(rowCount) + 1;
+            var counter = parseInt(incrementedCounter) - 1;
+            var data = '';
+
+            data += "<tr id='rowID" + incrementedCounter + "' class='rowClassID" + incrementedCounter + "'>"
+
+            data += "<td hidden id='data" + incrementedCounter + "'>" + incrementedCounter + "</td>"
+
+            //CHECKBOX WITH SALES ORDER ID VALUE
+            data += "<td><input type='checkbox' id='updateCheckboxSalesOrderLine" + incrementedCounter + "' class='checkboxid' onclick='clickedCheckbox(" + incrementedCounter + ")' value='" + nextLineID + "' /></td>";
+
+            //SALES ORDER LINE ID
+            data += "<td><input type='text' id='lineID" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].salesorderlineID' value='" + nextLineID + "' " +
+                "style='background-color:#FFFEDD; width:100%; text-align:center;' readonly></td > ";
+
+            //PRODUCT ID
+            data += "<td style='white- space:nowrap;'>" +
+                "<input type='text' oninput='updateProdID(" + incrementedCounter + ")' id='updateProductID" + incrementedCounter + "' list='updateproductidlist" + incrementedCounter + "' style='width:100%;' disabled/>" +
+                "<datalist id='updateproductidlist" + incrementedCounter + "'></datalist>" +
+                "<input type='text' hidden id='updateSelectedProductID" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].productID' /></td>";
+
+
+            //PRODUCT DESCRIPTION
+            data += "<td style='white- space:nowrap;' id='ProdDescTD'>" +
+                "<input type='text' oninput='updateProdDesc(" + incrementedCounter + ")' id='updateProductDesc" + incrementedCounter + "' list='updateproductdesclist" + incrementedCounter + "' style='width:100%;' disabled/>" +
+                "<datalist id='updateproductdesclist" + incrementedCounter + "'></datalist>" +
+                "<input type='text' hidden id='updateSelectedProductDesc" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].productDesc' /></td>";
+
+            //UNIT OF MEASUREMENT
+            data += "<td><input type='text' id='updateUOM" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].uom' " +
+                "style='width:100%; text-align:center;' readonly required></td>";
+
+            //QUANTITY
+            data += "<td id='QuantityTD'><input type='text' id='updateQuantity" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].quantity' " +
+                "style='width:100%; text-align:center;' oninput='updateQuantity(" + incrementedCounter + ")' readonly></td>";
+
+            //UNIT PRICE
+            data += "<td><input type='text' id='updateUnitPrice" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].unitPrice' " +
+                "style='background-color:#FFFEDD; width:100%; text-align:center;' readonly ></td>";
+
+            //SALES ORDER LINE AMOUNT
+            data += "<td><input type='text' id='updateSalesorderlineAmount" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].salesorderlineAmount' " +
+                "style='background-color:#FFFEDD; width:100%; text-align:center;' readonly></td>";
+
+            //DISCOUNT AMOUNT
+            data += "<td id='DiscountTD'><input type='text' id='updateDiscount" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].discount' " +
+                "style='width:100%; text-align:center;' oninput='updateDiscount(" + incrementedCounter + ")' readonly>" +
+                "<input type='number' hidden id='update1discount" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].discount1'/>" +
+                "<input type='number' hidden id='update2discount" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].discount2'/></td>";
+
+            // NET AMOUNT
+            data += "<td id='netamountTD'>" +
+                "<input type='number' class='netAmount' id='updatenetAmount" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].netAmount' " +
+                "style='background-color:#FFFEDD; width:100%; text-align:center;' readonly></td>";
+
+
+            //FREE GOODS
+            data += "<td><input type='text' id='updateFreeGood" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].freeGood' " +
+                "style='width:100%; text-align:center;' readonly></td>";
+
+            //STATUS
+            data += "<td><input type='text' id='updateStatus" + incrementedCounter + "' name='salesorderlinetable[" + counter + "].status' " +
+                "style='width:100%; text-align:center;' hidden></td>";
+
+            data += "</tr>"
+            $('#updateItemsTable').append(data);
+        }
+    </script>
+
+    @*--SCRIPT WHEN CHECKBOX CHECKED OR UNCHECK*@
+    <script>
+        function clickedCheckbox(rowID) {
+            if (!$("#updateCheckboxSalesOrderLine" + rowID).is(":checked")) {
+                $("#updateProductID" + rowID).prop("disabled", true);
+                $("#updateProductDesc" + rowID).prop("disabled", true);
+                $("#updateQuantity" + rowID).prop("readonly", true);
+                $("#updateDiscount" + rowID).prop("readonly", true);
+                $("#updateFreeGood" + rowID).prop("readonly", true);
+            }
+        }
+    </script>
+
+    @*--SCRIPT FOR THE DATALIST*@
+    <script>
+        $(document).ready(function () {
+            $("#updateShipToAddress").on('input', function () {
+                var val = this.value;
+                var newVal = val;
+
+                if (newVal.length == 0) {
+
+                }
+                else {
+                    if ($('#updateaddresslist option').filter(function () {
+                        return this.value === val;
+                    }).length) {
+                        //send ajax request
+                        var value = this.value;
+                        $("#updateSelectedAddress").val($('#updateaddresslist [value="' + value + '"]').data('value'));
+                    }
+                    else {
+                        alert("Not in the selection")
+                    }
+                }
+            });
+
+            $("#updatePaymentTerms").on('input', function () {
+                var val = this.value;
+                var newVal = val;
+
+                if (newVal.length == 0) {
+
+                }
+                else {
+                    if ($('#updatetermslist option').filter(function () {
+                        return this.value === val;
+                    }).length) {
+                        //send ajax request
+                        var value = this.value;
+                        $("#updateSelectedTerm").val($('#updatetermslist [value="' + value + '"]').data('value'));
+                    }
+                    else {
+                        alert("Not in the selection")
+                    }
+                }
+            });
+
+            $("#proddesc").on("input", function () {
+                var rowCount = $("#updateItemsTable tbody tr").length;
+                var checkedCount = 0;
+                var checkedRowID = 0;
+                //check if checkbox has been checked
+                for (var counter = 1; counter <= rowCount; counter++) {
+                    if ($("#updateCheckboxSalesOrderLine" + counter).is(":checked")) {
+                        checkedCount++; checkedRowID = counter;
+                    }
+                }
+
+                //if checked == 1, make fields editable, add check and x button on the side
+                if (checkedCount == 1) {
+                }
+                else {
+                    alert("Please select one row only.")
+                }
+            });
+        });
+    </script>
+
+    @*--SCRIPT WHEN UPDATING PRODUCT ID AND DESCRIPTION*@
+    <script>
+        function updateProdID(rowID) {
+            var val = $("#updateProductID" + rowID).val();
+            var optionID = "#updateproductidlist" + rowID + " option";
+            var selectedProdID = "#updateSelectedProductID" + rowID;
+            var newVal = val;
+
+            if (newVal.length == 0) {
+
+            }
+            else {
+                if ($(optionID).filter(function () {
+                    return this.value === val;
+                }).length) {
+                    var value = val;
+                    $(selectedProdID).val(value);
+
+                    var Products = {};
+                    Products.url = "/SalesOrder/getUnitPrice";
+                    Products.type = "POST";
+                    Products.data = JSON.stringify({ Product: value });
+                    Products.datatype = "json";
+                    Products.contentType = "application/json";
+                    Products.success = function (ProductsList) {
+                        $.each(ProductsList, function (index, optiondata) {
+                            var discount = 0;
+                            if (optiondata.Discount === "null" || optiondata.Discount === "")
+                                discount = 0;
+                            else
+                                discount = optiondata.Discount;
+                            $("#updateProductID" + rowID).val(optiondata.ProductID);
+                            $("#updateSelectedProductID" + rowID).val(optiondata.ProductID)
+                            $("#updateProductDesc" + rowID).val(optiondata.ProductName);
+                            $("#updateSelectedProductDesc" + rowID).val(optiondata.ProductName);
+                            $("#updateUnitPrice" + rowID).val(optiondata.UnitPrice);
+                            $("#updateUOM" + rowID).val(optiondata.UoM);
+                            $("#updateDiscount" + rowID).val(discount);
+                        });
+                        //var netPrice = calculateNetPrice(rowID);
+                        //$("#updateSalesorderlineAmount" + rowID).val(netPrice)
+                        calculateNetPrice(rowID);
+                        calculateTotalNetValue();
+                        calculateDiscount1();
+                        calculateDiscount2();
+                    }
+                    Products.error = function () { alert("Cannot Retrieve Product Details..."); };
+                    $.ajax(Products);
+
+
+                }
+                else {
+                    alert("Not in the selection")
+                }
+            }
+        }
+
+        function updateProdDesc(rowID) {
+            var val = $("#updateProductDesc" + rowID).val();
+            var optionID = "#updateproductdesclist" + rowID + " option";
+            var selectedProdDesc = "#updateSelectedProductDesc" + rowID;
+            var newVal = val;
+
+            if (newVal.length == 0) {
+                $("#updateProductID" + rowID).val("");
+                $("#updateSelectedProductID" + rowID).val("")
+                $("#updateProductDesc" + rowID).val("");
+                $("#updateSelectedProductDesc" + rowID).val("");
+                $("#updateUOM" + rowID).val("");
+                $("#updateQuantity" + rowID).val("");
+                $("#updateUnitPrice" + rowID).val("");
+                $("#updateSalesorderlineAmount" + rowID).val("");
+                $("#updateDiscount" + rowID).val("");
+                $("#netAmount" + rowID).val("");
+                $("#updateFreeGood" + rowID).val("");
+            }
+            else {
+                if ($(optionID).filter(function () {
+                    return this.value === val;
+                }).length) {
+                    var value = val;
+                    var data = $(optionID).filter(function () {
+                        return this.value === val;
+                    }).data('value');
+                    $(selectedProdDesc).val(value);
+
+                    var Products = {};
+                    Products.url = "/SalesOrder/getUnitPrice";
+                    Products.type = "POST";
+                    Products.data = JSON.stringify({ Product: data });
+                    Products.datatype = "json";
+                    Products.contentType = "application/json";
+                    Products.success = function (ProductsList) {
+                        $.each(ProductsList, function (index, optiondata) {
+                            var discount = 0;
+                            if (optiondata.Discount === "null" || optiondata.Discount === "")
+                                discount = 0;
+                            else
+                                discount = optiondata.Discount;
+                            $("#updateProductID" + rowID).val(optiondata.ProductID);
+                            $("#updateSelectedProductID" + rowID).val(optiondata.ProductID)
+                            $("#updateProductDesc" + rowID).val(optiondata.ProductName);
+                            $("#updateSelectedProductDesc" + rowID).val(optiondata.ProductName);
+                            $("#updateUnitPrice" + rowID).val(optiondata.UnitPrice);
+                            $("#updateUOM" + rowID).val(optiondata.UoM);
+                            $("#updateDiscount" + rowID).val(discount);
+                        });
+                        //ADDED: 02-09-2018
+                        calculateGrossAmount(rowID);
+                        calculateNetPrice(rowID);
+                        calculateTotalGrossValue();
+                        calculateDiscountLevel1();
+                        calculateDiscountLevel2();
+                        //ADDED: 02-09-2018
+
+                    }
+                    Products.error = function () { alert("Cannot Retrieve Product Details..."); };
+                    $.ajax(Products);
+                }
+                else {
+                    //alert("Not in the selection")
+                }
+            }
+        }
+    </script>
+
+    @*--SCRIPT WHEN UPDATING QUANTITY AND DISCOUNT*@
+    <script>
+        function updateQuantity(rowID) {
+            calculateGrossAmount(rowID);
+            calculateNetPrice(rowID);
+            calculateTotalGrossValue();
+        }
+
+        function updateDiscount(rowID) {
+            calculateNetPrice(rowID);
+            calculateTotalGrossValue();
+            calculateDiscount1();
+            calculateDiscount2();
+        }
+    </script>
+
+    @*--SCRIPTS TO CALCULATE NET PRICE AND TOTAL NET VALUE*@
+
+    <script>
+        //CALCULATES THE LINE GROSS AMOUNT
+        function calculateGrossAmount(rowID) {
+            var unitPrice = $("input#updateUnitPrice" + rowID).val();
+            var quantity = $("input#updateQuantity" + rowID).val();
+            var total = unitPrice * quantity
+
+            $("#updateSalesorderlineAmount" + rowID).val(total)
+        }
+
+        function calculateNetPrice(rowID) {
+            var unitPrice = $("input#updateUnitPrice" + rowID).val();
+            var quantity = $("input#updateQuantity" + rowID).val();
+            var total = unitPrice * quantity
+
+            var discount = 0;
+            discount = $("#updateDiscount" + rowID).val();
+            var netAmt = total - discount;
+
+            $("#netAmount" + rowID).val(netAmt.toFixed(2))
+        }
+
+        //CALCULATES THE TOTAL GROSS AMOUNT
+        function calculateTotalGrossValue() {
+            var rowCount = $("#updateItemsTable tbody tr").length;
+            var totalNetVal = 0;
+            var totalDiscount = 0;
+
+            for (var count = 1; count <= rowCount; count++) {
+                totalNetVal += parseFloat($("#updateSalesorderlineAmount" + count).val())
+            }
+            $("#totalNetVal").val(isNaN(totalNetVal) ? 0 : totalNetVal.toFixed(2));
+            calculateTotalNetAmtValue();
+        }
+
+        //CALCULATES THE TOTAL NET AMOUNT
+        function calculateTotalNetAmtValue() {
+            var rowCount = $("#updateItemsTable tbody tr").length;
+            var totalNetAmt = 0;
+            var discount = 0;
+            var totalDiscount = 0;
+            var grossAmt = 0;
+
+            for (var count = 1; count <= rowCount; count++) {
+                discount = $("#updateDiscount" + count).val();
+                if (discount === "")
+                    discount = 0;
+                grossAmt += parseFloat($("#updateSalesorderlineAmount" + count).val())
+                totalDiscount += parseFloat(discount)
+            }
+            totalNetAmt = grossAmt - totalDiscount;
+            $("#totalOverallVal").val(isNaN(totalNetAmt) ? 0 : numeral(totalNetAmt).format('0,0.00'));
+        }
+
+        function calculateDiscount1() {
+            var rowCount = $("#updateItemsTable tbody tr").length;
+            var totalDiscount1 = 0;
+            var discount = 0;
+
+
+            for (var count = 1; count <= rowCount; count++) {
+                discount = $("#update1discount" + count).val();
+                if (discount === "")
+                    discount = 0;
+                totalDiscount1 += parseFloat(discount);
+            }
+            $("#disc1amntVal").val(isNaN(totalDiscount1) ? 0 : parseFloat(totalDiscount1).toFixed(2));
+
+        }
+
+        function calculateDiscount2() {
+            var rowCount = $("#updateItemsTable tbody tr").length;
+            var totalDiscount2 = 0;
+            var discount = 0;
+
+            for (var count = 1; count <= rowCount; count++) {
+                discount = $("#update2discount" + count).val();
+                if (discount === "")
+                    discount = 0;
+                totalDiscount2 += parseFloat(discount);
+            }
+            $("#disc2amntVal").val(isNaN(totalDiscount2) ? 0 : parseFloat(totalDiscount2).toFixed(2));
+        }
+
+        function calculateDiscountLevel1() {
+            var rowCount = $("#updateItemsTable tbody tr").length;
+            var totalDiscount1 = 0;
+            var discount = 0;
+
+
+            for (var count = 1; count <= rowCount; count++) {
+                discount = $("#1discount" + count).val();
+                if (discount === "")
+                    discount = 0;
+                totalDiscount1 += parseFloat(discount);
+            }
+            //alert("DISCOUNT 1: " + totalDiscount1);
+            $("#disc1amntVal").val(isNaN(totalDiscount1) ? 0 : numeral(totalDiscount1).format('0,0.00'));
+
+        }
+
+        function calculateDiscountLevel2() {
+            var rowCount = $("#updateItemsTable tbody tr").length;
+            var totalDiscount2 = 0;
+            var discount = 0;
+
+            for (var count = 1; count <= rowCount; count++) {
+                discount = $("#2discount" + count).val();
+                if (discount === "")
+                    discount = 0;
+                totalDiscount2 += parseFloat(discount);
+            }
+            //alert("DISCOUNT 2: " + totalDiscount2);
+            $("#disc2amntVal").val(isNaN(totalDiscount2) ? 0 : numeral(totalDiscount2).format('0,0.00'));
+        }
+    </script>
+
+    @*--SCRIPT TO REMOVE ORDER LINE*@
+    <script>
+        function removeOrderLine() {
+            //get updateItemsTable row count
+            var rowCount = $("#updateItemsTable tbody tr").length;
+            var checkedID = 0;
+            var checkedCount = $("table#updateItemsTable tbody td input[type='checkbox']:checked").length;
+
+            //check if checkbox has been checked
+            if (checkedCount > 0) {
+                for (var counter = 1; counter <= rowCount; counter++) {
+                    if ($("#updateCheckboxSalesOrderLine" + counter).is(":checked")) {
+                        var prodIDVal = $("#updateSelectedProductID" + counter).val();
+                        var prodDescVal = $("#updateSelectedProductDesc" + counter).val();
+                        if (prodIDVal === "" || prodIDVal === null || prodIDVal === "null")
+
+                            $("#updateItemsTable tbody tr#rowID" + counter).remove()
+                        else {
+                            $("#updateItemsTable tbody tr#rowID" + counter).prop("hidden", true)
+                            $("#updateStatus" + counter).val("REMOVED")
+                        }
+
+                    }
+                }
+            }
+            else {
+                alert("Please select line/s to remove.")
+            }
+
+        }
+    </script>
+    @*---------UPDATE SCRIPTS END HERE------------*@
+    @*============================================*@
+
+    @*--SCRIPT IN COMPUTING NET PRICE WHEN ENTERING QUANTITY AND DISCOUNT*@
+    <script>
+        $(document).ready(function () {
+            var rowCount = $("#updateItemsTable tbody tr").length;
+
+            for (var i = rowCount; i <= rowCount; i++) {
+                $("#salesorderlinetable").on('input', 'td#QuantityTD', function () {
+                    var unitPrice = $("input#unitPrice" + (i - 1)).val();
+                    var quantity = $("input#quantity" + (i - 1)).val();
+                    var total = unitPrice * quantity;
+
+                    $('input#salesorderlineAmount' + (i - 1)).val(total);
+                });
+
+                $("#salesorderlinetable").on('input', 'td#DiscountTD', function () {
+
+                    var unitPrice = $("input#unitPrice" + (i - 1)).val();
+                    var quantity = $("input#quantity" + (i - 1)).val();
+                    var total = unitPrice * quantity
+
+                    var percentage = $("input#discount" + (i - 1)).val();
+                    var price = total;
+                    var calcPrice = (total - (total * percentage / 100)).toFixed(2);
+
+                    $('input#salesorderlineAmount' + (i - 1)).val(calcPrice);
+                });
+            }
+        });
+    </script>
+
+    @*--POP UP FOR CONFIRMATION OF  POSTING*@
+    <script>
+        function popUp() {
+            var txt;
+            if (confirm("Do you want to Post all validated Sales Order to SAP?")) {
+                var supplierid = $("#Supplier").val();
+                //alert(supplierid);
+                if (supplierid == null || supplierid.trim() == "") {
+                    alert('Please select supplier before posting...');
+                } else {
+                    //alert('Sample Alert');
+                    SAPcreateOrder(supplierid);
+                }
+            } else {
+
+            }
+        }
+
+        function SAPcreateOrder(supplierid) {
+            $("#loader").css("display", "block");
+            var Customers = {};
+            Customers.url = "/SalesOrder/PostOrder";
+            Customers.type = "POST";
+            Customers.data = JSON.stringify({ supplierID: supplierid });
+            Customers.datatype = "json";
+            Customers.contentType = "application/json";
+            Customers.success = function () {
+                $("#loader").css("display", "none");
+                alert('Posting Success!');
+                window.location.href = window.location.href;
+            };
+
+            Customers.error = function () { alert("Cannot Retrieve Customers"); };
+            $.ajax(Customers);
+        }
+    </script>
+
+    @*--THIS IS TO SHOW THE ERRORS OF PENDING SALES ORDER*@
+    @*ADDED BY: MAE ROSE BIBIT - 02-16-2018*@
+    <script>
+        function retrieveErrors(salesOrderID, lineID) {
+            //20180221.JT.S
+            var linenum = 1;
+            //20180221.JT.E
+            var Errors = {};
+            Errors.url = "/SalesOrder/GetPostingErrors";
+            Errors.type = "POST";
+            Errors.data = JSON.stringify({ salesOrderID: salesOrderID, errorType: lineID });
+            Errors.datatype = "json";
+            Errors.contentType = "application/json";
+            Errors.success = function (ErrorsList) {
+                //20180221.JT.S
+                $('#errorsTable tbody').empty();
+                //20180221.JT.E
+                $.each(ErrorsList, function (index, optiondata) {
+                    var data = "";
+
+                    returned_value = optiondata.errorDate;
+                    ticks_string = returned_value.substring(6);
+                    ticks_number = parseInt(ticks_string);
+                    date = new Date(ticks_number);
+
+                    data += "<tr>";
+                    //20180221.JT.S
+                    //data += "<td style='width: 5% !important; text-align: center;'>" + optiondata.ID + "</td>";
+                    data += "<td style='width: 5% !important; text-align: center;'>" + linenum + "</td>";
+                    //20180221.JT.E
+                    data += "<td style='width: 40% !important;'>" + optiondata.errorDescription + "</td>";
+                    data += "<td style='width: 10% !important; text-align: center;'>" + date.toLocaleDateString() + "</td>";
+                    data += "<td style='width: 10% !important; text-align: center;'>" + optiondata.createdByName + "</td>";
+                    data += "</tr>";
+
+                    linenum++;
+                    $('#errorsTable tbody').append(data);
+                });
+                $("#errorsModal").modal("show");
+            };
+            Errors.error = function () { alert("Cannot Retrieve Errors."); };
+            $.ajax(Errors);
+
+
+        }
+    </script>
+
+</body>
+</html>

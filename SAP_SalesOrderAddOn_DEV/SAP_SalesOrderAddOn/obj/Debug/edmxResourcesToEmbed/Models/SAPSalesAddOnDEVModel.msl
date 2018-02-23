@@ -1,0 +1,351 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="DB_A1270D_SAPSalesAddOnModelStoreContainer" CdmEntityContainer="DB_A1270D_SAPSalesAddOnEntities">
+    <EntitySetMapping Name="tAccounts">
+      <EntityTypeMapping TypeName="DB_A1270D_SAPSalesAddOnModel.tAccount">
+        <MappingFragment StoreEntitySet="tAccount">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+          <ScalarProperty Name="PaymentTermsID" ColumnName="PaymentTermsID" />
+          <ScalarProperty Name="AccountName" ColumnName="AccountName" />
+          <ScalarProperty Name="AccountAddress" ColumnName="AccountAddress" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="CustomerGroupCode" ColumnName="CustomerGroupCode" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tAccountContacts">
+      <EntityTypeMapping TypeName="DB_A1270D_SAPSalesAddOnModel.tAccountContact">
+        <MappingFragment StoreEntitySet="tAccountContact">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="AccountContactID" ColumnName="AccountContactID" />
+          <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+          <ScalarProperty Name="ContactPerson" ColumnName="ContactPerson" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="DefaultContact" ColumnName="DefaultContact" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tAccountStatus">
+      <EntityTypeMapping TypeName="DB_A1270D_SAPSalesAddOnModel.tAccountStatu">
+        <MappingFragment StoreEntitySet="tAccountStatus">
+          <ScalarProperty Name="StatusCode" ColumnName="StatusCode" />
+          <ScalarProperty Name="StatusDesc" ColumnName="StatusDesc" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tAPMatrixCreditMemoes">
+      <EntityTypeMapping TypeName="DB_A1270D_SAPSalesAddOnModel.tAPMatrixCreditMemo">
+        <MappingFragment StoreEntitySet="tAPMatrixCreditMemo">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
+          <ScalarProperty Name="CustomerClassGroup" ColumnName="CustomerClassGroup" />
+          <ScalarProperty Name="CustomerClassGroupCode" ColumnName="CustomerClassGroupCode" />
+          <ScalarProperty Name="CustomerClassGroupDescription" ColumnName="CustomerClassGroupDescription" />
+          <ScalarProperty Name="CreditMemoFeeBasisID" ColumnName="CreditMemoFeeBasisID" />
+          <ScalarProperty Name="OrderType" ColumnName="OrderType" />
+          <ScalarProperty Name="AccountClass" ColumnName="AccountClass" />
+          <ScalarProperty Name="CreditMemoPercentagePerTemplate" ColumnName="CreditMemoPercentagePerTemplate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tAPMatrixDistributionFees">
+      <EntityTypeMapping TypeName="DB_A1270D_SAPSalesAddOnModel.tAPMatrixDistributionFee">
+        <MappingFragment StoreEntitySet="tAPMatrixDistributionFee">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
+          <ScalarProperty Name="CustomerGroupDescription" ColumnName="CustomerGroupDescription" />
+          <ScalarProperty Name="CustomerGroupCode" ColumnName="CustomerGroupCode" />
+          <ScalarProperty Name="OtherCriteriaID" ColumnName="OtherCriteriaID" />
+          <ScalarProperty Name="DistributionMarginRate" ColumnName="DistributionMarginRate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tCreditMemoFeeBasis">
+      <EntityTypeMapping TypeName="DB_A1270D_SAPSalesAddOnModel.tCreditMemoFeeBasi">
+        <MappingFragment StoreEntitySet="tCreditMemoFeeBasis">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="CreditMemoFeeBasisID" ColumnName="CreditMemoFeeBasisID" />
+          <ScalarProperty Name="CreditMemoFeeBasisDescription" ColumnName="CreditMemoFeeBasisDescription" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tDiscountLists">
+      <EntityTypeMapping TypeName="DB_A1270D_SAPSalesAddOnModel.tDiscountList">
+        <MappingFragment StoreEntitySet="tDiscountList">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="ProductType" ColumnName="ProductType" />
+          <ScalarProperty Name="CustomerGroupCode" ColumnName="CustomerGroupCode" />
+          <ScalarProperty Name="ProductCategory" ColumnName="ProductCategory" />
+          <ScalarProperty Name="DiscountLevel" ColumnName="DiscountLevel" />
+          <ScalarProperty Name="PercentageValue" ColumnName="PercentageValue" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tEmployees">
+      <EntityTypeMapping TypeName="DB_A1270D_SAPSalesAddOnModel.tEmployee">
+        <MappingFragment StoreEntitySet="tEmployee">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+          <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="ContactNumber" ColumnName="ContactNumber" />
+          <ScalarProperty Name="Role" ColumnName="Role" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tOtherCriterias">
+      <EntityTypeMapping TypeName="DB_A1270D_SAPSalesAddOnModel.tOtherCriteria">
+        <MappingFragment StoreEntitySet="tOtherCriteria">
+          <ScalarProperty Name="OtherCriteriaID" ColumnName="OtherCriteriaID" />
+          <ScalarProperty Name="OtherCriteriaDesc" ColumnName="OtherCriteriaDesc" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tPaymentTerms">
+      <EntityTypeMapping TypeName="DB_A1270D_SAPSalesAddOnModel.tPaymentTerm">
+        <MappingFragment StoreEntitySet="tPaymentTerm">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="PaymentTermsID" ColumnName="PaymentTermsID" />
+          <ScalarProperty Name="PaymentTermsCode" ColumnName="PaymentTermsCode" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tPriceLists">
+      <EntityTypeMapping TypeName="DB_A1270D_SAPSalesAddOnModel.tPriceList">
+        <MappingFragment StoreEntitySet="tPriceList">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="UoM" ColumnName="UoM" />
+          <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+          <ScalarProperty Name="EffectivityDate" ColumnName="EffectivityDate" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tProducts">
+      <EntityTypeMapping TypeName="DB_A1270D_SAPSalesAddOnModel.tProduct">
+        <MappingFragment StoreEntitySet="tProduct">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
+          <ScalarProperty Name="ProductCode" ColumnName="ProductCode" />
+          <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+          <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+          <ScalarProperty Name="PackSize" ColumnName="PackSize" />
+          <ScalarProperty Name="UoM" ColumnName="UoM" />
+          <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+          <ScalarProperty Name="Discount" ColumnName="Discount" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tSalesInvoiceHeaders">
+      <EntityTypeMapping TypeName="DB_A1270D_SAPSalesAddOnModel.tSalesInvoiceHeader">
+        <MappingFragment StoreEntitySet="tSalesInvoiceHeader">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="SalesInvoiceID" ColumnName="SalesInvoiceID" />
+          <ScalarProperty Name="InvoiceType" ColumnName="InvoiceType" />
+          <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+          <ScalarProperty Name="InvoiceDate" ColumnName="InvoiceDate" />
+          <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+          <ScalarProperty Name="InvoiceAmount" ColumnName="InvoiceAmount" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="DatePaid" ColumnName="DatePaid" />
+          <ScalarProperty Name="AmountPaid" ColumnName="AmountPaid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tSalesInvoiceLines">
+      <EntityTypeMapping TypeName="DB_A1270D_SAPSalesAddOnModel.tSalesInvoiceLine">
+        <MappingFragment StoreEntitySet="tSalesInvoiceLine">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="SalesInvoiceID" ColumnName="SalesInvoiceID" />
+          <ScalarProperty Name="SalesInvoiceLineID" ColumnName="SalesInvoiceLineID" />
+          <ScalarProperty Name="InvoiceDate" ColumnName="InvoiceDate" />
+          <ScalarProperty Name="InvoiceAmount" ColumnName="InvoiceAmount" />
+          <ScalarProperty Name="AmountPaid" ColumnName="AmountPaid" />
+          <ScalarProperty Name="DatePaid" ColumnName="DatePaid" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tSalesOrderHeaders">
+      <EntityTypeMapping TypeName="DB_A1270D_SAPSalesAddOnModel.tSalesOrderHeader">
+        <MappingFragment StoreEntitySet="tSalesOrderHeader">
+          <ScalarProperty Name="TransactionStatusID" ColumnName="TransactionStatusID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="SalesOrderID" ColumnName="SalesOrderID" />
+          <ScalarProperty Name="SAP_SalesOrderID" ColumnName="SAP_SalesOrderID" />
+          <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+          <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+          <ScalarProperty Name="AccountContactID" ColumnName="AccountContactID" />
+          <ScalarProperty Name="PaymentTermsID" ColumnName="PaymentTermsID" />
+          <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
+          <ScalarProperty Name="SalesOrderCreationDate" ColumnName="SalesOrderCreationDate" />
+          <ScalarProperty Name="ExternalReference" ColumnName="ExternalReference" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="ShippingAddress" ColumnName="ShippingAddress" />
+          <ScalarProperty Name="RequestedDate" ColumnName="RequestedDate" />
+          <ScalarProperty Name="Comments" ColumnName="Comments" />
+          <ScalarProperty Name="GrossAmount" ColumnName="GrossAmount" />
+          <ScalarProperty Name="Discount1Amount" ColumnName="Discount1Amount" />
+          <ScalarProperty Name="Discount2Amount" ColumnName="Discount2Amount" />
+          <ScalarProperty Name="SalesOrderAmount" ColumnName="SalesOrderAmount" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tSalesOrderLines">
+      <EntityTypeMapping TypeName="DB_A1270D_SAPSalesAddOnModel.tSalesOrderLine">
+        <MappingFragment StoreEntitySet="tSalesOrderLine">
+          <ScalarProperty Name="TransactionStatus" ColumnName="TransactionStatus" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="SalesOrderID" ColumnName="SalesOrderID" />
+          <ScalarProperty Name="SalesOrderLineID" ColumnName="SalesOrderLineID" />
+          <ScalarProperty Name="SAP_SalesOrderID" ColumnName="SAP_SalesOrderID" />
+          <ScalarProperty Name="SAP_SalesOrderLineID" ColumnName="SAP_SalesOrderLineID" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+          <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+          <ScalarProperty Name="FreeGood" ColumnName="FreeGood" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="UoM" ColumnName="UoM" />
+          <ScalarProperty Name="Discount" ColumnName="Discount" />
+          <ScalarProperty Name="GrossAmount" ColumnName="GrossAmount" />
+          <ScalarProperty Name="Discount1Amount" ColumnName="Discount1Amount" />
+          <ScalarProperty Name="Discount2Amount" ColumnName="Discount2Amount" />
+          <ScalarProperty Name="SalesOrderLineAmount" ColumnName="SalesOrderLineAmount" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tSalesOrderStatus">
+      <EntityTypeMapping TypeName="DB_A1270D_SAPSalesAddOnModel.tSalesOrderStatu">
+        <MappingFragment StoreEntitySet="tSalesOrderStatus">
+          <ScalarProperty Name="StatusCode" ColumnName="StatusCode" />
+          <ScalarProperty Name="StatusDesc" ColumnName="StatusDesc" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tShippingAddresses">
+      <EntityTypeMapping TypeName="DB_A1270D_SAPSalesAddOnModel.tShippingAddress">
+        <MappingFragment StoreEntitySet="tShippingAddress">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="ShippingAddressID" ColumnName="ShippingAddressID" />
+          <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+          <ScalarProperty Name="ShippingAddress" ColumnName="ShippingAddress" />
+          <ScalarProperty Name="ShippingAddressNoComma" ColumnName="ShippingAddressNoComma" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="DefaultShipTo" ColumnName="DefaultShipTo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tSuppliers">
+      <EntityTypeMapping TypeName="DB_A1270D_SAPSalesAddOnModel.tSupplier">
+        <MappingFragment StoreEntitySet="tSupplier">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
+          <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+          <ScalarProperty Name="SupplierNameNoComma" ColumnName="SupplierNameNoComma" />
+          <ScalarProperty Name="TaxType" ColumnName="TaxType" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tTaxes">
+      <EntityTypeMapping TypeName="DB_A1270D_SAPSalesAddOnModel.tTax">
+        <MappingFragment StoreEntitySet="tTaxes">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
+          <ScalarProperty Name="Classification" ColumnName="Classification" />
+          <ScalarProperty Name="Rate" ColumnName="Rate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tUserLogins">
+      <EntityTypeMapping TypeName="DB_A1270D_SAPSalesAddOnModel.tUserLogin">
+        <MappingFragment StoreEntitySet="tUserLogins">
+          <ScalarProperty Name="LoginID" ColumnName="LoginID" />
+          <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+          <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vSalesOrderHeaderLists">
+      <EntityTypeMapping TypeName="DB_A1270D_SAPSalesAddOnModel.vSalesOrderHeaderList">
+        <MappingFragment StoreEntitySet="vSalesOrderHeaderList">
+          <ScalarProperty Name="statusDescription" ColumnName="statusDescription" />
+          <ScalarProperty Name="TransactionStatusID" ColumnName="TransactionStatusID" />
+          <ScalarProperty Name="AccountName" ColumnName="AccountName" />
+          <ScalarProperty Name="SalesOrderID" ColumnName="SalesOrderID" />
+          <ScalarProperty Name="SAP_SalesOrderID" ColumnName="SAP_SalesOrderID" />
+          <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+          <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+          <ScalarProperty Name="AccountContactID" ColumnName="AccountContactID" />
+          <ScalarProperty Name="PaymentTermsID" ColumnName="PaymentTermsID" />
+          <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
+          <ScalarProperty Name="SalesOrderCreationDate" ColumnName="SalesOrderCreationDate" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="ExternalReference" ColumnName="ExternalReference" />
+          <ScalarProperty Name="ShippingAddress" ColumnName="ShippingAddress" />
+          <ScalarProperty Name="RequestedDate" ColumnName="RequestedDate" />
+          <ScalarProperty Name="SalesOrderAmount" ColumnName="SalesOrderAmount" />
+          <ScalarProperty Name="Comments" ColumnName="Comments" />
+          <ScalarProperty Name="SAP_Status" ColumnName="SAP_Status" />
+          <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vSalesOrderLines">
+      <EntityTypeMapping TypeName="DB_A1270D_SAPSalesAddOnModel.vSalesOrderLine">
+        <MappingFragment StoreEntitySet="vSalesOrderLine">
+          <ScalarProperty Name="SalesOrderID" ColumnName="SalesOrderID" />
+          <ScalarProperty Name="SalesOrderLineID" ColumnName="SalesOrderLineID" />
+          <ScalarProperty Name="SAP_SalesOrderID" ColumnName="SAP_SalesOrderID" />
+          <ScalarProperty Name="SAP_SalesOrderLineID" ColumnName="SAP_SalesOrderLineID" />
+          <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+          <ScalarProperty Name="FreeGood" ColumnName="FreeGood" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="UoM" ColumnName="UoM" />
+          <ScalarProperty Name="Discount" ColumnName="Discount" />
+          <ScalarProperty Name="SalesOrderLineAmount" ColumnName="SalesOrderLineAmount" />
+          <ScalarProperty Name="ProductCode" ColumnName="ProductCode" />
+          <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+          <ScalarProperty Name="PrdUnitPrice" ColumnName="PrdUnitPrice" />
+          <ScalarProperty Name="PrdDiscount" ColumnName="PrdDiscount" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Expr1" ColumnName="Expr1" />
+          <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tPostingErrorLogs">
+      <EntityTypeMapping TypeName="DB_A1270D_SAPSalesAddOnModel.tPostingErrorLog">
+        <MappingFragment StoreEntitySet="tPostingErrorLogs">
+          <ScalarProperty Name="errorTypeID" ColumnName="errorTypeID" />
+          <ScalarProperty Name="createdBy" ColumnName="createdBy" />
+          <ScalarProperty Name="errorDate" ColumnName="errorDate" />
+          <ScalarProperty Name="errorDescription" ColumnName="errorDescription" />
+          <ScalarProperty Name="salesOrderID" ColumnName="salesOrderID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tAddOnSalesOrderTransactionStatus">
+      <EntityTypeMapping TypeName="DB_A1270D_SAPSalesAddOnModel.tAddOnSalesOrderTransactionStatu">
+        <MappingFragment StoreEntitySet="tAddOnSalesOrderTransactionStatus">
+          <ScalarProperty Name="statusDescription" ColumnName="statusDescription" />
+          <ScalarProperty Name="statusID" ColumnName="statusID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DB_A1270D_SAPSalesAddOnModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="tAccount">
+    <Key>
+      <PropertyRef Name="AccountID" />
+    </Key>
+    <Property Name="AccountID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PaymentTermsID" Type="int" />
+    <Property Name="AccountName" Type="nvarchar(max)" />
+    <Property Name="AccountAddress" Type="nvarchar(max)" />
+    <Property Name="Status" Type="nvarchar" MaxLength="20" />
+  </EntityType>
+  <EntityType Name="tAccountContact">
+    <Key>
+      <PropertyRef Name="AccountContactID" />
+    </Key>
+    <Property Name="AccountContactID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountID" Type="int" />
+    <Property Name="ContactPerson" Type="varchar(max)" />
+    <Property Name="Status" Type="varchar" MaxLength="10" />
+  </EntityType>
+  <EntityType Name="tEmployee">
+    <Key>
+      <PropertyRef Name="EmployeeID" />
+    </Key>
+    <Property Name="EmployeeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EmailAddress" Type="nvarchar(max)" />
+    <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+    <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+    <Property Name="ContactNumber" Type="nvarchar" MaxLength="12" />
+    <Property Name="Role" Type="nvarchar" MaxLength="20" />
+    <Property Name="Status" Type="nvarchar" MaxLength="10" />
+  </EntityType>
+  <EntityType Name="tPaymentTerm">
+    <Key>
+      <PropertyRef Name="PaymentTermsID" />
+    </Key>
+    <Property Name="PaymentTermsID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PaymentTermsCode" Type="nvarchar" MaxLength="10" />
+    <Property Name="Description" Type="nvarchar" MaxLength="25" />
+  </EntityType>
+  <EntityType Name="tPrincipal">
+    <Key>
+      <PropertyRef Name="PrincipalID" />
+    </Key>
+    <Property Name="PrincipalID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PrincipalName" Type="varchar(max)" />
+  </EntityType>
+  <EntityType Name="tProduct">
+    <Key>
+      <PropertyRef Name="ProductID" />
+    </Key>
+    <Property Name="ProductID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PrincipalID" Type="int" />
+    <Property Name="ProductCode" Type="nvarchar" MaxLength="15" />
+    <Property Name="ProductName" Type="nvarchar(max)" />
+    <Property Name="CategoryName" Type="nvarchar(max)" />
+    <Property Name="PackSize" Type="nvarchar(max)" />
+    <Property Name="UnitPrice" Type="float" />
+  </EntityType>
+  <EntityType Name="tSalesOrderHeader">
+    <Key>
+      <PropertyRef Name="SalesOrderID" />
+    </Key>
+    <Property Name="SalesOrderID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EmployeeID" Type="int" />
+    <Property Name="AccountID" Type="int" />
+    <Property Name="PaymentTermsID" Type="int" />
+    <Property Name="ShippingAddress" Type="nvarchar(max)" />
+    <Property Name="PrincipalID" Type="int" />
+    <Property Name="SalesOrderCreationDate" Type="datetime" />
+    <Property Name="RequiredDeliveryDate" Type="datetime" />
+    <Property Name="SalesOrderAmount" Type="float" />
+    <Property Name="Remarks" Type="nvarchar(max)" />
+    <Property Name="Status" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="tSalesOrderLine">
+    <Key>
+      <PropertyRef Name="SalesOrderLineID" />
+    </Key>
+    <Property Name="SalesOrderLineID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SalesOrderID" Type="int" />
+    <Property Name="ProductID" Type="int" />
+    <Property Name="UnitPrice" Type="float" />
+    <Property Name="FreeGood" Type="nvarchar" MaxLength="3" />
+    <Property Name="Quantity" Type="int" />
+    <Property Name="SalesOrderLineAmount" Type="float" />
+    <Property Name="SalesOrderLineRemarks" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="tShippingAddress">
+    <Key>
+      <PropertyRef Name="ShippingAddressID" />
+    </Key>
+    <Property Name="ShippingAddressID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountID" Type="int" />
+    <Property Name="ShippingAddress" Type="nvarchar(max)" />
+    <Property Name="Status" Type="nvarchar" MaxLength="10" />
+  </EntityType>
+  <EntityType Name="tUserLogins">
+    <Key>
+      <PropertyRef Name="LoginID" />
+    </Key>
+    <Property Name="LoginID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EmployeeID" Type="int" />
+    <Property Name="EmailAddress" Type="varchar(max)" />
+    <Property Name="Password" Type="varchar" MaxLength="32" />
+    <Property Name="Status" Type="varchar" MaxLength="10" />
+  </EntityType>
+  <EntityContainer Name="DB_A1270D_SAPSalesAddOnModelStoreContainer">
+    <EntitySet Name="tAccount" EntityType="Self.tAccount" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tAccountContact" EntityType="Self.tAccountContact" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tEmployee" EntityType="Self.tEmployee" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tPaymentTerm" EntityType="Self.tPaymentTerm" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tPrincipal" EntityType="Self.tPrincipal" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tProduct" EntityType="Self.tProduct" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tSalesOrderHeader" EntityType="Self.tSalesOrderHeader" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tSalesOrderLine" EntityType="Self.tSalesOrderLine" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tShippingAddress" EntityType="Self.tShippingAddress" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tUserLogins" EntityType="Self.tUserLogins" Schema="dbo" store:Type="Tables" />
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,67 @@
+﻿* {
+    font-family: 'calibri';
+}
+
+.loginform_background .opacity_container {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    height: 335px;
+    min-width: 465px;
+    background-color: black;
+    opacity: 0.6;
+    z-index: -1;
+}
+
+.loginform_background {
+    position: absolute;
+    z-index: 1000;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    height: 300px;
+    width: 400px;
+}
+
+.loginform_background .logo_container {
+    border: 1px solid transparent;
+    height: 300px;
+}
+
+.loginform_background .logo_container .logo {
+    height: 50px;
+    width: 280px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.Login {
+    border: 0;
+    border-radius: 8px;
+    border-color: white;
+    text-align: center;
+    width: 80%;
+    background-color: rgba(255, 255, 255,0.7);
+    font-size: 100%;
+    color: black;
+    text-align: center;
+    margin-top: 10px;
+    width: 270px;
+    height: 35px;
+}
+
+.BtnSignIn {
+    margin-top: 10px;
+    margin-bottom: 13px;
+    background-color: #ffcb00;
+    font-size: 100%;
+    width: 270px;
+    height: 35px;
+    padding: 1% 0%;
+    border-radius: 8px;
+    border-color: transparent;
+    color: white;
+}

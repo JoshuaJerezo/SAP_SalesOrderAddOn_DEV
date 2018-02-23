@@ -1,0 +1,253 @@
+﻿@*@using PagedList;*@
+
+@*@model IPagedList<SAP_SalesOrderAddOn.ViewModel.SalesInvoiceViewModel>*@
+@model List<SAP_SalesOrderAddOn.ViewModel.SalesInvoiceViewModel>
+
+
+<script>
+    function exportDistribution() {
+        var principal = $("#principalDropDownID option:selected").val();
+    }
+</script>
+
+<html>
+<head>
+    <link href="~/Content/Layout.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+
+    <style>
+        div.datetimepicker.datetimepicker-dropdown-bottom-right.dropdown-menu {
+            background-color: white !important;
+        }
+    </style>
+</head>
+
+<body style="background-image: url('../../Images/allpagebg.jpg');  background-size: 100%;">
+    @Html.Partial("~/Views/Shared/NavBar.cshtml", null)
+
+    <div class="container-fluid">
+        <div class="PageTitle">
+            <center>
+                <h2><strong>DISTRIBUTION</strong></h2>
+            </center>
+        </div>
+    </div>
+
+    <div class="container-fluid" style="margin-top:10px;">
+        <div class="row">
+            <div class="col-12 col-md-8">
+                @using (Html.BeginForm("Index", "Distribution", FormMethod.Get, new
+                {
+                    @class = "form-inline"@*, @id = "exportDistributionForm"*@ }))
+                {
+                    ViewBag.principal = TempData["principal"];
+
+                    <div class="form-group">
+
+                        <div class="form-group">
+
+                            @Html.DropDownList("principals", new SelectList(ViewBag.principal, "Value", "Text", Session["principals"]), "Choose Supplier....", new
+                       {
+                           @class = "MainSelect"@*, @id = "principalDropDownID"*@ })
+
+
+                        </div>
+                        <div class="form-group">
+                            <input name="invoiceFromDate" type='text' id='invoiceFromDateTimePicker' placeholder="From Date" value="@Session["invoiceFromDate"]" style="margin-right: 10px;" required />
+                        </div>
+
+                        <div class="form-group">
+                            <input name="invoiceToDate" type='text' id='invoiceToDateTimePicker' placeholder="To Date" value="@Session["invoiceToDate"]" required />
+                        </div>
+
+
+                        <button class="btn btn-main" style="box-shadow: 0px 2.5px 5px -2px grey;">
+                            Filter
+                        </button>
+                    </div>
+                }
+            </div>
+            <div class="col-6 col-md-4">
+                <div class="float-right">
+                    <div class="form-group">
+                        @*<button class="btn btn-main" style="margin-top:7.5px; box-shadow: 0px 2.5px 5px -2px grey;" onclick="exportDistributionForm()">
+                                Export
+                            </button>*@
+                        <button class="btn btn-main" box-shadow: 0px 2.5px 5px -2px grey; onclick="document.getElementById('exportDistributionForm').submit();">
+                            Export Report
+                        </button>
+                        <button class="btn btn-main" box-shadow: 0px 2.5px 5px -2px grey; onclick="document.getElementById('exportPOForm').submit();">
+                            Export for PO
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @using (Html.BeginForm("Export", "Distribution", FormMethod.Post, new { @id = "exportDistributionForm" }))
+        {
+            @*<div class="form-group">
+                    <button class="btn btn-main" style="margin-top:7.5px; box-shadow: 0px 2.5px 5px -2px grey;" onclick="exportDistributionForm()">
+                        Export
+                    </button>
+                </div>*@
+        ViewBag.principal = TempData["principal"];
+        <div class="form-group" hidden>
+            @Html.DropDownList("principals", new SelectList(ViewBag.principal, "Value", "Text", Session["principals"]), "Choose Supplier....", new { @class = "MainSelect", @id = "principalDropDownID" })
+        </div>
+        <div class="form-group" hidden>
+            <input name="principalname" type='text' id='principalname' value="@Session["principalname"]" />
+        </div>
+        <div class="form-group" hidden>
+            <input name="invoiceFromDate" type='text' id='invoiceFromDateTimePicker' placeholder="From Date" value="@Session["invoiceFromDate"]" style="margin-right: 10px;" />
+        </div>
+        <div class="form-group" hidden>
+            <input name="invoiceToDate" type='text' id='invoiceToDateTimePicker' placeholder="To Date" value="@Session["invoiceToDate"]" />
+        </div>
+
+        <div class="row" style="margin-top:-13px">
+            <div class="col">
+                <table class="table table-striped">
+                    <thead>
+                        <tr style="border:0; border-top:2px solid gray">
+                            <td><strong>Invoice Date</strong></td>
+                            <td><strong>Invoice ID</strong></td>
+                            <td><strong>Principal</strong></td>
+                            <td><strong>Customer ID</strong></td>
+                            <td><strong>Customer Name</strong></td>
+                            <td><strong>External Reference</strong></td>
+                            <td><strong>Payment Terms</strong></td>
+                            <td><strong>Invoice Amount</strong></td>
+                            <td><strong>Amount Collected</strong></td>
+                            <td><strong>Margin Fee</strong></td>
+                            <td><strong>Margin Rate</strong></td>
+                            <td><strong>Withholding Tax</strong></td>
+                            <td><strong>Amount to be Paid</strong></td>
+                            @*<td><strong>Description</strong></td>*@
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int i = 0;
+                            foreach (var item in Model)
+                            {
+                                <tr style="border:0; border-top:2px solid darkgray">
+                                    <td>
+                                        @*@item.InvoiceDate.ToString()*@
+                                        @Convert.ToDateTime(item.InvoiceDate.ToString()).ToShortDateString()
+                                    </td>
+                                    <td>
+                                        @item.SalesInvoiceID
+                                    </td>
+                                    <td>
+                                        @Html.Hidden(item.PrincipalID)
+                                        @item.PrincipalName
+                                    </td>
+                                    <td>
+                                        @item.AccountID
+                                    </td>
+                                    <td>
+                                        @item.AccountName
+                                    </td>
+                                    <td>
+                                        @item.ExternalReference
+                                    </td>
+                                    <td>
+                                        @item.PaymentTerms
+                                    </td>
+                                    <td>
+                                        @*@item.InvoiceAmount*@
+                                        @Convert.ToDecimal(@item.InvoiceAmount).ToString("#,##0.00")
+                                    </td>
+                                    <td>
+                                        @*@item.AmountPaid*@
+                                        @Convert.ToDecimal(@item.AmountPaid).ToString("#,##0.00")
+                                    </td>
+                                    <td>
+                                        @*@item.MarginFee*@
+                                        @Convert.ToDecimal(@item.MarginFee).ToString("#,##0.00")
+                                    </td>
+                                    <td>
+                                        @item.MarginRate
+                                    </td>
+                                    <td>
+                                        @*@item.Tax*@
+                                        @Convert.ToDecimal(@item.Tax).ToString("#,##0.00")
+                                    </td>
+                                    <td>
+                                        @*@item.Amounttobepaid*@
+                                        @Convert.ToDecimal(@item.Amounttobepaid).ToString("#,##0.00")
+                                    </td>
+                                    @*<td>
+                                            @item.Desc
+                                        </td>*@
+                                </tr>
+                                i++;
+                            }
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+                            }
+
+
+        <!--FOR EXPORT PO-->
+        @using (Html.BeginForm("ExportPO", "Distribution", FormMethod.Post, new { @id = "exportPOForm" }))
+        {
+
+            ViewBag.principal = TempData["principal"];
+            <div class="form-group" hidden>
+                @Html.DropDownList("principals", new SelectList(ViewBag.principal, "Value", "Text", Session["principals"]), "Choose Supplier....", new { @class = "MainSelect", @id = "principalDropDownID" })
+            </div>
+            <div class="form-group" hidden>
+                <input name="principalname" type='text' id='principalname' />
+            </div>
+            <div class="form-group" hidden>
+                <input name="invoiceFromDate" type='text' id='invoiceFromDateTimePicker' placeholder="From Date" value="@Session["invoiceFromDate"]" style="margin-right: 10px;" />
+            </div>
+            <div class="form-group" hidden>
+                <input name="invoiceToDate" type='text' id='invoiceToDateTimePicker' placeholder="To Date" value="@Session["invoiceToDate"]" />
+            </div>
+        }
+
+    </div>
+
+</body>
+</html>
+
+<script src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#invoiceFromDateTimePicker').datetimepicker({
+            //format: 'L',
+            //format: 'mm/dd/yyyy',
+            format: 'yyyy/mm/dd',
+            useCurrent: false,
+            minView: 2,
+            autoclose: 1
+        }).on('changeDate', function (ev) {
+            var toDateVal = $('#invoiceToDateTimePicker').val();
+            var fromDateVal = $('#invoiceFromDateTimePicker').val();
+            if (toDateVal != "") {
+                if (toDateVal < fromDateVal) {
+                    $('#invoiceToDateTimePicker').val("");
+                }
+            }
+            $('#invoiceToDateTimePicker').datetimepicker('setStartDate', fromDateVal);
+        });
+
+        $('#invoiceToDateTimePicker').datetimepicker({
+            //format: 'L',
+            //format: 'mm/dd/yyyy',
+            format: 'yyyy/mm/dd',
+            minView: 2,
+            useCurrent: false,
+            autoclose: 1
+        });
+    });
+
+</script>
+

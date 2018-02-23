@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="DB_A1270D_SAPSalesAddOnEntities-Web.config Connection String" description="DB_A1270D_SAPSalesAddOnEntities Connection String used in web.config by the application to access the database." defaultValue="metadata=res://*/Models.Model1.csdl|res://*/Models.Model1.ssdl|res://*/Models.Model1.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=sql5037.site4now.net;initial catalog=DB_A1270D_SAPSalesAddOn;user id=DB_A1270D_SAPSalesAddOn_admin;password=S4PS3rv1c3101;multipleactiveresultsets=True;application name=EntityFramework&quot;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\3\.\ Consolidation\\SAP_SalesOrderAddOn_DEV\\APISalesAddonDEV\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='DB_A1270D_SAPSalesAddOnEntities']/@connectionString" />
+  </parameter>
+</parameters>

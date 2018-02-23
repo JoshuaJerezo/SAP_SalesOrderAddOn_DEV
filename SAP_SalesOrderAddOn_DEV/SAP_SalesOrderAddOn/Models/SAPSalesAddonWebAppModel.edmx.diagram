@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="0367f4a0858e4838879577983517e70b" Name="Diagram1">
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tAccount" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tAccountContact" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tAccountStatu" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tAPMatrixCreditMemo" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tAPMatrixDistributionFee" Width="1.5" PointX="4.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tCreditMemoFeeBasi" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tDiscountList" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tEmployee" Width="1.5" PointX="6.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tOtherCriteria" Width="1.5" PointX="6.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tPaymentTerm" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tPostingErrorLog" Width="1.5" PointX="2.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tPriceList" Width="1.5" PointX="8.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tProduct" Width="1.5" PointX="8.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tSalesInvoiceHeader" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tSalesInvoiceLine" Width="1.5" PointX="10.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tSalesOrderHeader" Width="1.5" PointX="4.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tSalesOrderStatu" Width="1.5" PointX="10.75" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tShippingAddress" Width="1.5" PointX="0.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tSupplier" Width="1.5" PointX="8.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tTax" Width="1.5" PointX="10.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tUserLogin" Width="1.5" PointX="12.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tAddOnSalesOrderTransactionStatu" Width="1.5" PointX="12.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DB_A1270D_SAPSalesAddOnModel.tSalesOrderLine" Width="1.5" PointX="13.375" PointY="6.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

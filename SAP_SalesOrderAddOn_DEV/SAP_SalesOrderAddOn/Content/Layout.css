@@ -1,0 +1,253 @@
+﻿.PageTitle {
+    margin-top: 2%;
+}
+
+.container-fluid {
+    width: 100%;
+    padding-right: 50px !important;
+    padding-left: 50px !important;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.Btn {
+    font-size: 80%;
+    background-color: #ffcb00;
+    border-radius: 10px;
+    border-color: transparent;
+    color: white;
+}
+
+.table td, .table th {
+    /*padding: .75rem;*/
+    vertical-align: top;
+    border-top: 5px solid gray;
+}
+
+.form-group {
+    margin-bottom: 0 !important;
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: .175rem .175rem !important;
+    font-size: 1rem;
+    line-height: 1 !important;
+    color: #495057;
+    background-color: #fff;
+    background-image: none;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+/*select.form-control{
+			-webkit-appearance: menulist;
+			box-sizing: border-box;
+			align-items: center;
+			white-space: pre;
+			-webkit-rtl-ordering: logical;
+			color: black;
+			background-color: transparent;
+			cursor: default;
+			border: 0 !important;
+		}
+		select.form-control:focus {
+			color: #495057;
+			background-color: transparent !important;
+			border-color: transparent !important;
+			outline: 0;
+			box-shadow: 0 0 0 0;
+		}*/
+
+
+.btn-main {
+    padding: .175rem .75rem !important;
+    line-height: 1 !important;
+}
+
+.MainSelect {
+    -webkit-appearance: menulist;
+    box-sizing: border-box;
+    align-items: center;
+    white-space: pre;
+    -webkit-rtl-ordering: logical;
+    color: black;
+    background-color: transparent;
+    cursor: default;
+    border: 0 !important;
+}
+
+    .MainSelect:after {
+        content: '\f078';
+        font: normal normal normal 17px/1 FontAwesome;
+        color: #0ebeff;
+        right: 11px;
+        top: 6px;
+        height: 34px;
+        padding: 15px 0px 0px 8px;
+        border-left: 1px solid #0ebeff;
+        position: absolute;
+        pointer-events: none;
+    }
+
+label {
+    display: inline-block;
+    margin-bottom: 0 !important;
+}
+
+.close {
+    color: white !important;
+}
+
+    .close:hover {
+        color: rgb(105,105,105);
+    }
+
+.plain-select {
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    width: 210px;
+}
+
+    .plain-select select {
+        line-height: normal;
+        height: 38px;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        -ms-appearance: none;
+        appearance: none;
+        width: 200px;
+        display: block;
+        width: 100%;
+        padding: 8px 20px 7px 10px;
+        margin: 0;
+        line-height: normal;
+    }
+
+.ie8 .plain-select select {
+    padding-right: 3px
+}
+
+.plain-select select:focus {
+    outline: none;
+}
+
+.plain-select ::-ms-expand {
+    display: none;
+}
+
+.plain-select:after {
+    content: "";
+    position: absolute;
+    z-index: 2;
+    right: 8px;
+    top: 50%;
+    margin-top: -3px;
+    height: 0;
+    width: 0;
+    border-top: 6px solid #ffcb00;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    pointer-events: none;
+}
+
+.modal-content {
+    border-radius: 0 !important;
+    width:125%;
+}
+
+.modal-body {
+    background-image: url('../../Images/allpagebg.jpg');
+    padding-left: 3rem !important;
+    padding-right: 3rem !important;
+    padding-bottom: 3rem !important;
+}
+
+.btn-modal {
+    padding: 0 !important;
+}
+
+.modal-header {
+    background-color: #363636 !important;
+    border-radius: 0 !important;
+    color: white;
+}
+
+input {
+    border: 0;
+    outline: 0;
+    background: transparent;
+    border-bottom: 1px solid gray;
+}
+
+input:focus ~ .floating-label,
+input:not(:focus):valid ~ .floating-label {
+    top: -15px;
+    bottom: 10px;
+    left: 15px;
+    font-size: 12px;
+    opacity: .5;
+}
+
+.inputText {
+    font-size: 16px;
+    width: 200px;
+    height: 35px;
+}
+
+.floating-label {
+    position: absolute;
+    pointer-events: none;
+    left: 20px;
+    bottom: 1px;
+    transition: 0.2s ease all;
+    color: gray;
+}
+
+.myDiv-noEvents {
+    pointer-events: none;
+}
+
+.myDiv-withEvents {
+    pointer-events: auto;
+}
+
+#loader {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    width: 150px;
+    height: 150px;
+    margin: -75px 0 0 -75px;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

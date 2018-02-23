@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SAP_SalesOrderAddOn.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="SAP_SalesOrderAddOn_ManageCustomerInDEV_service" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://my342435.sapbydesign.com/sap/bc/srt/scs/sap/managecustomerin1?sap-vhost=my342435.sapbydesign.com</Value>
+    </Setting>
+    <Setting Name="SAP_SalesOrderAddOn_ManageSalesOrderInDEV_service" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">https://my342435.sapbydesign.com/sap/bc/srt/scs/sap/managesalesorderin5?sap-vhost=my342435.sapbydesign.com</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
